@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mascotas/widgets/Background.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,28 +9,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Método para actualizar las imágenes
+  void actualizarHome() {}
 
-
-  //metodo para actualizar las imagenes
-  void actualizarHome(){
-
-  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: [
-              Row(
+        body: Stack(
+          children: [
+            Background(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: ListView(
+                scrollDirection: Axis.vertical,
                 children: [
-                  Text("Home Screen")
+                  const Row(
+                    children: [
+                      Text(
+                        "Home Screen",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      )
+                    ],
+                  ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

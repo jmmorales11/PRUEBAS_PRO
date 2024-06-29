@@ -37,7 +37,7 @@ class _TabBarCustomState extends State<TabBarCustom> {
             _buildIcon(Icons.home, isSelected[0]),
             _buildIcon(Icons.person, isSelected[1]),
             _buildIcon(Icons.favorite_border, isSelected[2]),
-            _buildIcon(Icons.home, isSelected[3]),
+            _buildIcon(Icons.logout_outlined, isSelected[3]),
           ],
           color: const Color.fromARGB(30, 255, 255, 255),
           buttonBackgroundColor: const Color.fromARGB(255, 25, 23, 61),
