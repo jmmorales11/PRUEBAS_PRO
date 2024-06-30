@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mascotas/Register/RegisterPage.dart';
+import 'package:mascotas/widgets/tab_bar.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -88,7 +90,12 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               SizedBox(height: 40),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => TabBarCustom()),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF19173d),
                                   shape: RoundedRectangleBorder(
@@ -126,7 +133,12 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(height: 40),
                               Container(
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => RegisterPage()),
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF19173d),
                                     shape: RoundedRectangleBorder(
