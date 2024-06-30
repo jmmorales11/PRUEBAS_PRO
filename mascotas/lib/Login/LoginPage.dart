@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF19173d),
+                                  backgroundColor: Color(0xFF1f4a71),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF19173d),
+                                    backgroundColor: Color(0xFF1f4a71),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
@@ -149,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text('Register', style: TextStyle(color: Colors.white)),
                                 ),
                               ),
+                              SizedBox(height: 60,)
                             ],
                           ),
                         ),
@@ -183,11 +184,11 @@ class ContainerPainter extends CustomPainter {
 
     final path = Path()
       ..moveTo(0, 20)
-      ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width - 20, 0)
-      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width, size.height - 20)
-      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise:  true)
       ..lineTo(20, size.height)
       ..arcToPoint(Offset(0, size.height - 20), radius: Radius.circular(20), clockwise: true)
       ..close();
