@@ -43,26 +43,41 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color.fromARGB(255, 25, 23, 61),
-        body: Stack(
-          children: [
-            //Background(), // No tengo acceso a tu implementación de Background, así que la he comentado temporalmente
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: [
-                  SingleChildScrollView(
-                    child: StaggeredGrid.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      children: items,
-                    ),
-                  ),
-                ],
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment.bottomRight,
+              radius: 3.5,
+              colors: [
+                const Color.fromARGB(240, 22, 61, 96),
+                const Color.fromARGB(255, 25, 23, 61),
+                const Color.fromARGB(255, 25, 23, 61),
+                const Color.fromARGB(255, 25, 23, 61),
+                const Color.fromARGB(240, 25, 23, 61),
+              ],
             ),
-          ],
+          ),
+          child: Stack(
+            children: [
+              //Background(), // No tengo acceso a tu implementación de Background, así que la he comentado temporalmente
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    SingleChildScrollView(
+                      child: StaggeredGrid.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        children: items,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: actualizarHome,
