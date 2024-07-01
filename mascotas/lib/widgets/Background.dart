@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 class Background extends StatelessWidget {
+
+  final List<Color> colores;
   const Background({
     super.key,
+    this.colores = const[
+      Colors.transparent,
+      Color.fromARGB(255, 57, 156, 254),
+    ],
   });
 
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
-      child: const DecoratedBox(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 25, 23, 61),
-              Color.fromARGB(255, 100, 180, 246),
-            ],
-            begin: Alignment.topLeft,
+            colors: colores,
+            //Posición
+            stops: [0.6,1.0],
+            //Se pone donde se inicia y donde termina el gradiente
+            begin: Alignment.topCenter,
             end: Alignment.bottomRight,
           ),
         ),

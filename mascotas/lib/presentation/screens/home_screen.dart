@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:mascotas/widgets/Background.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,9 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 25, 23, 61),
         body: Stack(
           children: [
-            // Background(), // No tengo acceso a tu implementación de Background, así que la he comentado temporalmente
+            //Background(), // No tengo acceso a tu implementación de Background, así que la he comentado temporalmente
             Padding(
               padding: const EdgeInsets.all(15),
               child: ListView(
