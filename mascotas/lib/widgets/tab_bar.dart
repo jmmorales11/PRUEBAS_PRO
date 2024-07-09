@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:mascotas/mascotas/MascotasPage.dart';
 import 'package:mascotas/mascotas/registrar_mascota.dart';
 import 'package:mascotas/presentation/screens/ejemplo_screen.dart';
 import 'package:mascotas/presentation/screens/home_screen.dart';
@@ -24,7 +25,7 @@ class _TabBarCustomState extends State<TabBarCustom> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const EjemploScreen(),
-    const RegistrarMascota(),
+    MascotasPage(),
     const EjemploScreen(), // Puedes ajustar esta lista según tus necesidades
   ];
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mascotas/mascotas/registrar_mascota.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -16,13 +17,15 @@ class _MascotasPageState extends State<MascotasPage> {
     {
       'name': 'Nombre 1',
       'description': 'Descripción 1',
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwWRH-oXGeRDRQxDcmt1EgAt-FzSg_qAQFBA&s',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwWRH-oXGeRDRQxDcmt1EgAt-FzSg_qAQFBA&s',
       'icon': 'person'
     },
     {
       'name': 'Nombre 2',
       'description': 'Descripción 2',
-      'image': 'https://i.pinimg.com/236x/26/24/9a/26249a78777f6e3527d959ed4399dc1e.jpg',
+      'image':
+          'https://i.pinimg.com/236x/26/24/9a/26249a78777f6e3527d959ed4399dc1e.jpg',
       'icon': 'person'
     }
   ];
@@ -76,7 +79,8 @@ class _MascotasPageState extends State<MascotasPage> {
                           cards[index]['image']!,
                           scale: 1,
                           fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
                             return Icon(Icons.error, color: Colors.red);
                           },
                         ),
@@ -91,7 +95,8 @@ class _MascotasPageState extends State<MascotasPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NewCardPage()),
+                      MaterialPageRoute(
+                          builder: (context) => RegistrarMascota()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -107,21 +112,6 @@ class _MascotasPageState extends State<MascotasPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class NewCardPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Agregar Nueva Mascota'),
-        backgroundColor: Color.fromARGB(255, 22, 61, 96),
-      ),
-      body: Center(
-        child: Text('Agregar Nueva Mascota'),
       ),
     );
   }
