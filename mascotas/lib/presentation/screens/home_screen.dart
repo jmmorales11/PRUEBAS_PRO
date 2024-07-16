@@ -21,14 +21,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchImageUrls() async {
-    final response = await http.get(Uri.parse('http://localhost:4000/bmpr/img/')); // Reemplaza con la URL de tu API
+    final response = await http.get(Uri.parse(
+        'https://back-mascotas.vercel.app/bmpr/img')); // Reemplaza con la URL de tu API
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       setState(() {
         items = List.generate(data.length, (index) {
           // Genera StaggeredGridTiles basados en los datos recibidos
           int crossAxisCellCount = 2; // Valores entre 1 y 3
-          int mainAxisCellCount = Random().nextInt(3) + 1; // Valores entre 1 y 3
+          int mainAxisCellCount =
+              Random().nextInt(3) + 1; // Valores entre 1 y 3
           return StaggeredGridTile.count(
             crossAxisCellCount: crossAxisCellCount,
             mainAxisCellCount: mainAxisCellCount,
@@ -78,7 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisCount: 4,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        children: items != null ? items : [], // Muestra los items solo si están cargados
+                        children: items != null
+                            ? items
+                            : [], // Muestra los items solo si están cargados
                       ),
                     ),
                   ],

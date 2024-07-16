@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-
-
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -100,10 +98,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.person, color: Colors.white, size: 40),
+                                        child: Icon(Icons.person,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Name',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                     ),
@@ -124,10 +124,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.person, color: Colors.white, size: 40),
+                                        child: Icon(Icons.person,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Last Name',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                     ),
@@ -148,10 +150,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.add_ic_call, color: Colors.white, size: 40),
+                                        child: Icon(Icons.add_ic_call,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Phone Number',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                     ),
@@ -172,10 +176,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.email, color: Colors.white, size: 40),
+                                        child: Icon(Icons.email,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Email',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                     ),
@@ -198,10 +204,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                       decoration: InputDecoration(
                                         prefixIcon: Padding(
                                           padding: EdgeInsets.only(left: 20),
-                                          child: Icon(Icons.calendar_today, color: Colors.white, size: 40),
+                                          child: Icon(Icons.calendar_today,
+                                              color: Colors.white, size: 40),
                                         ),
                                         labelText: 'Date Birthday',
-                                        labelStyle: TextStyle(color: Colors.white),
+                                        labelStyle:
+                                            TextStyle(color: Colors.white),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(20),
                                       ),
@@ -223,10 +231,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.person, color: Colors.white, size: 40),
+                                        child: Icon(Icons.person,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Username',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                     ),
@@ -248,15 +258,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.lock, color: Colors.white, size: 40),
+                                        child: Icon(Icons.lock,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Password',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          _isObscured ? Icons.visibility_off : Icons.visibility,
+                                          _isObscured
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
                                           color: Colors.white,
                                         ),
                                         onPressed: () {
@@ -284,15 +298,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: EdgeInsets.only(left: 20),
-                                        child: Icon(Icons.lock, color: Colors.white, size: 40),
+                                        child: Icon(Icons.lock,
+                                            color: Colors.white, size: 40),
                                       ),
                                       labelText: 'Confirm Password',
-                                      labelStyle: TextStyle(color: Colors.white),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(20),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          _isObscured ? Icons.visibility_off : Icons.visibility,
+                                          _isObscured
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
                                           color: Colors.white,
                                         ),
                                         onPressed: () {
@@ -315,9 +333,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 50, vertical: 15),
                                   ),
-                                  child: Text('Save', style: TextStyle(color: Colors.white)),
+                                  child: Text('Save',
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                               ),
                             ],
@@ -329,7 +349,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       left: MediaQuery.of(context).size.width / 2 - 60,
                       top: 0,
                       child: GestureDetector(
-                       // onTap: () => _getImage(),
+                        // onTap: () => _getImage(),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
@@ -356,7 +376,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-
 class ContainerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -368,11 +387,14 @@ class ContainerPainter extends CustomPainter {
       ..moveTo(0, 20)
       ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width - 20, 0)
-      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: false)
+      ..arcToPoint(Offset(size.width, 20),
+          radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width, size.height - 20)
-      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise:  false)
+      ..arcToPoint(Offset(size.width - 20, size.height),
+          radius: Radius.circular(20), clockwise: false)
       ..lineTo(20, size.height)
-      ..arcToPoint(Offset(0, size.height - 20), radius: Radius.circular(20), clockwise: false)
+      ..arcToPoint(Offset(0, size.height - 20),
+          radius: Radius.circular(20), clockwise: false)
       ..close();
 
     canvas.drawPath(path, paint);

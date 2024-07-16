@@ -34,7 +34,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
       String user) async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:4000/bmpr/mascotas/crear'),
+        Uri.parse('https://back-mascotas.vercel.app/bmpr/mascotas/crear'),
         body: json.encode({
           'nombre_mas': nombre,
           'raza': raza,
