@@ -148,12 +148,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(20),
                                         errorStyle:
-                                        TextStyle(color: Colors.redAccent),
+                                            TextStyle(color: Colors.redAccent),
                                         // Color del texto de error
                                         errorText: _lastNameError,
                                         suffixIcon: _lastNameError != null
                                             ? Icon(Icons.error,
-                                            color: Colors.redAccent)
+                                                color: Colors.redAccent)
                                             : null,
                                       ),
                                       style: TextStyle(color: Colors.white54),
@@ -193,23 +193,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(20),
                                         errorStyle:
-                                        TextStyle(color: Colors.redAccent),
+                                            TextStyle(color: Colors.redAccent),
                                         // Color del texto de error
                                         errorText: _phoneNumberError,
                                         suffixIcon: _phoneNumberError != null
                                             ? Icon(Icons.error,
-                                            color: Colors.redAccent)
+                                                color: Colors.redAccent)
                                             : null,
                                       ),
                                       style: TextStyle(color: Colors.white54),
                                       onChanged: (value) {
                                         setState(() {
-                                          _phoneNumberError =
-                                              _validations.validatePhoneNumber(value);
+                                          _phoneNumberError = _validations
+                                              .validatePhoneNumber(value);
                                         });
                                       },
-                                      validator: (value) =>
-                                          _validations.validatePhoneNumber(value),
+                                      validator: (value) => _validations
+                                          .validatePhoneNumber(value),
                                     ),
                                   ),
                                 ),
@@ -238,12 +238,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(20),
                                         errorStyle:
-                                        TextStyle(color: Colors.redAccent),
+                                            TextStyle(color: Colors.redAccent),
                                         // Color del texto de error
                                         errorText: _emailError,
                                         suffixIcon: _emailError != null
                                             ? Icon(Icons.error,
-                                            color: Colors.redAccent)
+                                                color: Colors.redAccent)
                                             : null,
                                       ),
                                       style: TextStyle(color: Colors.white54),
@@ -255,7 +255,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                       validator: (value) =>
                                           _validations.validateEmail(value),
-
                                     ),
                                   ),
                                 ),
@@ -313,12 +312,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(20),
                                         errorStyle:
-                                        TextStyle(color: Colors.redAccent),
+                                            TextStyle(color: Colors.redAccent),
                                         // Color del texto de error
                                         errorText: _usernameError,
                                         suffixIcon: _usernameError != null
                                             ? Icon(Icons.error,
-                                            color: Colors.redAccent)
+                                                color: Colors.redAccent)
                                             : null,
                                       ),
                                       style: TextStyle(color: Colors.white54),
@@ -334,91 +333,42 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                 ),
                                 SizedBox(height: 20),
-                            Container(
-                              padding: EdgeInsets.all(0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF19173d),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: TextFormField(
-                                      controller: _passwordController,
-                                      obscureText: _isObscured,
-                                      decoration: InputDecoration(
-                                        prefixIcon: Padding(
-                                          padding: EdgeInsets.only(left: 20),
-                                          child: Icon(Icons.lock, color: Colors.white, size: 40),
-                                        ),
-                                        hintText: "Enter your password",
-                                        hintStyle: TextStyle(color: Colors.white54),
-                                        labelText: 'Password',
-                                        labelStyle: TextStyle(color: Colors.white),
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.all(20),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            _isObscured ? Icons.visibility_off : Icons.visibility,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _isObscured = !_isObscured;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      style: TextStyle(color: Colors.white54),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _passwordError =
-                                              _validations.validatePassword(value);
-                                        });
-                                      },
-                                      validator: (value) => _validations.validatePassword(value),
-                                    ),
-                                  ),
-                                  if (_passwordError != null)
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 20, top: 5),
-                                      child: Text(
-                                        _passwordError!,
-                                        style: TextStyle(color: Colors.redAccent, fontSize: 12),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
                                 Container(
                                   padding: EdgeInsets.all(0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
                                           color: Color(0xFF19173d),
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                         child: TextFormField(
-                                          controller: _confirmPasswordController,
+                                          controller: _passwordController,
                                           obscureText: _isObscured,
                                           decoration: InputDecoration(
                                             prefixIcon: Padding(
-                                              padding: EdgeInsets.only(left: 20),
-                                              child: Icon(Icons.lock, color: Colors.white, size: 40),
+                                              padding:
+                                                  EdgeInsets.only(left: 20),
+                                              child: Icon(Icons.lock,
+                                                  color: Colors.white,
+                                                  size: 40),
                                             ),
-                                            hintText: "Enter your password again",
-                                            hintStyle: TextStyle(color: Colors.white54),
+                                            hintText: "Enter your password",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white54),
                                             labelText: 'Password',
-                                            labelStyle: TextStyle(color: Colors.white),
+                                            labelStyle:
+                                                TextStyle(color: Colors.white),
                                             border: InputBorder.none,
                                             contentPadding: EdgeInsets.all(20),
                                             suffixIcon: IconButton(
                                               icon: Icon(
-                                                _isObscured ? Icons.visibility_off : Icons.visibility,
+                                                _isObscured
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility,
                                                 color: Colors.white,
                                               ),
                                               onPressed: () {
@@ -428,22 +378,106 @@ class _RegisterPageState extends State<RegisterPage> {
                                               },
                                             ),
                                           ),
-                                          style: TextStyle(color: Colors.white54),
+                                          style:
+                                              TextStyle(color: Colors.white54),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _passwordError = _validations
+                                                  .validatePassword(value);
+                                            });
+                                          },
+                                          validator: (value) => _validations
+                                              .validatePassword(value),
+                                        ),
+                                      ),
+                                      if (_passwordError != null)
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 20, top: 5),
+                                          child: Text(
+                                            _passwordError!,
+                                            style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Container(
+                                  padding: EdgeInsets.all(0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF19173d),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: TextFormField(
+                                          controller:
+                                              _confirmPasswordController,
+                                          obscureText: _isObscured,
+                                          decoration: InputDecoration(
+                                            prefixIcon: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 20),
+                                              child: Icon(Icons.lock,
+                                                  color: Colors.white,
+                                                  size: 40),
+                                            ),
+                                            hintText:
+                                                "Enter your password again",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white54),
+                                            labelText: 'Password',
+                                            labelStyle:
+                                                TextStyle(color: Colors.white),
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.all(20),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                _isObscured
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _isObscured = !_isObscured;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          style:
+                                              TextStyle(color: Colors.white54),
                                           onChanged: (value) {
                                             setState(() {
                                               _confirmPasswordError =
-                                                  _validations.validatePasswordEquals(value, _passwordController.text);
+                                                  _validations
+                                                      .validatePasswordEquals(
+                                                          value,
+                                                          _passwordController
+                                                              .text);
                                             });
                                           },
-                                          validator: (value) => _validations.validatePasswordEquals(value, _passwordController.text),
+                                          validator: (value) => _validations
+                                              .validatePasswordEquals(value,
+                                                  _passwordController.text),
                                         ),
                                       ),
                                       if (_confirmPasswordError != null)
                                         Padding(
-                                          padding: EdgeInsets.only(left: 20, top: 5),
+                                          padding:
+                                              EdgeInsets.only(left: 20, top: 5),
                                           child: Text(
                                             _confirmPasswordError!,
-                                            style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                                            style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 12),
                                           ),
                                         ),
                                     ],
