@@ -1,15 +1,31 @@
 
 const {Schema, model, default: mongoose}= require("mongoose")
 const usersSchema= new Schema({
-    usuario:{
+    firstName:{
         type: String,
         required:true
     },
-    contrasena:{
+    lastName:{
         type: String,
         required:true
     },
-    correo:{
+    phoneNumber:{
+        type: String,
+        required:true
+    },
+    email:{
+        type: String,
+        required:true,
+    },
+    dateBirthday:{
+        type: Date,
+        required:true
+    },
+    username:{
+        type: String,
+        required:true
+    },
+    password:{
         type: String,
         required:true
     }

@@ -2,35 +2,27 @@ const { Router } = require('express');
 const router = Router();
 const User = require('../models/Users');
 
-// Obtener lista de usuarios
+// Get all users
 router.get('/users', async (req, res) => {
     try {
         const users = await User.find();
-        res.json(users);
+        res.json({ users });
     } catch (error) {
-        console.error("Error user: ", error);
-        res.status(500).json({ error: "Error" });
+        console.error("error user", error);
+        res.status(500).json({ error: "error" });
     }
 });
 
-
-
-// Crear un usuario con datos enviados en la solicitud
+// Add a new user
 router.post('/users/create', async (req, res) => {
-    const { usuario, contrasena, correo } = req.body;
-
     try {
-        await User.create({
-            usuario,
-            contrasena,
-            correo
-        });
-        res.json({ message: 'Usuario creado' });
+        const newUser = new User(req.body);
+        await newUser.save();
+        res.json({ message: 'User added successfully', user: newUser });
     } catch (error) {
-        console.error("Error creating user: ", error);
-        res.status(500).json({ error: "Error creating user" });
+        console.error("error add user", error);
+        res.status(500).json({ error: "Error adding user" });
     }
 });
-
 
 module.exports = router;
