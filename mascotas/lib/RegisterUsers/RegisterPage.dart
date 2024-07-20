@@ -28,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
 
+
   final _formKey = GlobalKey<FormState>();
   final Validations _validations = Validations();
 
@@ -683,7 +684,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                               'dateBirthday': _dateController.text,
                                               'username': _usernameController.text,
                                               'password': _passwordController.text,
-                                              'userPicture': imageBase64, // Añadir la imagen en base64
+                                              'userPicture': imageBase64,
+                                              'role': "no administrador"
                                             };
 
                                             // Enviar los datos a la API
