@@ -30,6 +30,8 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
   final TextEditingController _image2 = TextEditingController();
   final TextEditingController _image3 = TextEditingController();
   String? _imageBase64;
+  String privacidad = 'Privado';
+  String sexoSeleccionado = 'Macho'; // Default value
   int contador = 0;
   bool insertar = false;
   io.File? _image; // Variable para almacenar la imagen seleccionada
@@ -110,6 +112,19 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
   }
 
   //__________________________________________________________________________________________________________________-
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        _fecha_nac.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
 
   // Método para abrir la cámara y seleccionar una imagen
   Future<void> _openCamera(int i) async {
@@ -364,8 +379,27 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                               color: const Color.fromARGB(61, 0, 0, 0),
                             ),
                             width: 400,
-                            child: TextField(
-                              controller: _sexo,
+                            child: DropdownButtonFormField<String>(
+                              value: sexoSeleccionado,
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    sexoSeleccionado = newValue;
+                                  });
+                                }
+                              },
+                              items: <String>[
+                                'Macho',
+                                'Hembra'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Sexo',
@@ -376,9 +410,34 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 ),
                               ),
                               style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
+                              dropdownColor:
+                                  Colors.black, // Fondo negro para las opciones
                             ),
                           ),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(30),
+                          //     border: Border.all(
+                          //         color: Color.fromARGB(240, 22, 61, 96),
+                          //         width: 2),
+                          //     color: const Color.fromARGB(61, 0, 0, 0),
+                          //   ),
+                          //   width: 400,
+                          //   child: TextField(
+                          //     controller: _sexo,
+                          //     decoration: InputDecoration(
+                          //       border: InputBorder.none,
+                          //       labelText: 'Sexo',
+                          //       labelStyle: TextStyle(color: Colors.white),
+                          //       prefixIcon: Icon(
+                          //         Icons.person,
+                          //         color: Colors.white,
+                          //       ),
+                          //     ),
+                          //     style: TextStyle(color: Colors.white),
+                          //     keyboardType: TextInputType.name,
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 10,
                           ),
@@ -386,26 +445,29 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
+                                color: Color.fromARGB(240, 22, 61, 96),
+                                width: 2,
+                              ),
                               color: const Color.fromARGB(61, 0, 0, 0),
                             ),
                             width: 400,
-                            child: TextField(
+                            child: TextFormField(
                               controller: _fecha_nac,
+                              readOnly: true,
+                              onTap: () => _selectDate(context),
                               decoration: InputDecoration(
-                                border: InputBorder.none,
                                 labelText: 'Fecha de nacimiento',
+                                border: InputBorder.none,
                                 labelStyle: TextStyle(color: Colors.white),
                                 prefixIcon: Icon(
-                                  Icons.person,
+                                  Icons.calendar_today,
                                   color: Colors.white,
                                 ),
                               ),
                               style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
                             ),
                           ),
+
                           SizedBox(
                             height: 10,
                           ),
@@ -472,8 +534,25 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                               color: const Color.fromARGB(61, 0, 0, 0),
                             ),
                             width: 400,
-                            child: TextField(
-                              controller: _privacidad,
+                            child: DropdownButtonFormField<String>(
+                              value: privacidad,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  privacidad = newValue!;
+                                });
+                              },
+                              items: <String>[
+                                'Privado',
+                                'Público'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Privacidad',
@@ -484,9 +563,35 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 ),
                               ),
                               style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
+                              dropdownColor:
+                                  Colors.black, // Fondo negro para las opciones
                             ),
                           ),
+
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(30),
+                          //     border: Border.all(
+                          //         color: Color.fromARGB(240, 22, 61, 96),
+                          //         width: 2),
+                          //     color: const Color.fromARGB(61, 0, 0, 0),
+                          //   ),
+                          //   width: 400,
+                          //   child: TextField(
+                          //     controller: _privacidad,
+                          //     decoration: InputDecoration(
+                          //       border: InputBorder.none,
+                          //       labelText: 'Privacidad',
+                          //       labelStyle: TextStyle(color: Colors.white),
+                          //       prefixIcon: Icon(
+                          //         Icons.person,
+                          //         color: Colors.white,
+                          //       ),
+                          //     ),
+                          //     style: TextStyle(color: Colors.white),
+                          //     keyboardType: TextInputType.name,
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 10,
                           ),
@@ -540,23 +645,41 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                             ),
                             onPressed: () async {
                               // Call _convertImageToBase64 and wait for it to complete
-                              await _convertImageToBase64();
-                              // Now you can safely use imageBase[0]
-                              if (imageBase[1] != null) {
-                                await postImage(imageBase[1]!, _nombre_mas.text,
-                                    _privacidad.text);
-                              }
 
-                              // postMascota(
-                              //     _nombre_mas.text,
-                              //     _raza.text,
-                              //     _sexo.text,
-                              //     _fecha_nac.text,
-                              //     _color.text,
-                              //     _tipo.text,
-                              //     _privacidad.text,
-                              //     _descripcion.text,
-                              //     "Marley");
+                              // Insertar imagnes
+                              if (images[0] != null ||
+                                  images[1] != null ||
+                                  images[2] != null) {
+                                await _convertImageToBase64();
+                                for (var image in imageBase) {
+                                  if (image != null) {
+                                    print(
+                                        "Enviando imagen a la API: ${image.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
+                                    await postImage(
+                                        image, _nombre_mas.text, privacidad);
+                                  }
+                                }
+                              }
+                              print("Fecha de Nacimiento: ${_fecha_nac.text}");
+
+                              print("Privacidad: ${privacidad}");
+
+                              postMascota(
+                                  _nombre_mas.text,
+                                  _raza.text,
+                                  sexoSeleccionado,
+                                  _fecha_nac.text,
+                                  _color.text,
+                                  _tipo.text,
+                                  privacidad,
+                                  _descripcion.text,
+                                  "Marley");
+                              setState(() {
+                                images = List.filled(3, null);
+                                imagePaths = List.filled(3, null);
+                                imageBase = List.filled(3, null);
+                                contador = 0; // Reset the counter
+                              });
 
                               //   }
                             },
