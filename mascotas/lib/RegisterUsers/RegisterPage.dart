@@ -146,11 +146,12 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> getUsers() async {
-    data = await ApiService.getUsers();
+    final List<dynamic> users = await ApiService.getUsers(); // Obtener una lista de usuarios
     setState(() {
-      userData = data['users'];
+      userData = users;
     });
   }
+
 
   //TRANSFORMAR LA IMAGEN A BASE64
   Future<void> _convertImageToBase64() async {

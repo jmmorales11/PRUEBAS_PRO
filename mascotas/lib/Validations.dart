@@ -1,5 +1,4 @@
 class Validations {
-
   //VALIDA USUARIO DE PERSONAS
   //verificamos solo ingreso de letras y numeros de 5 a 10 caracteres
   String? validateUser(String? value) {

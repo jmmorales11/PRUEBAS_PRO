@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mascotas/RegisterUsers/RegisterPage.dart';
 import 'package:mascotas/widgets/tab_bar.dart';
-import '../Validations.dart';
+import '../RegisterUsers/ApiServices_Users.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,7 +15,55 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  final Validations _validations = Validations();
+
+  late Map data;
+  late List userData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getUsers();
+  }
+
+  Future<void> getUsers() async {
+    final List<dynamic> users = await ApiService.getUsers(); // Obtener una lista de usuarios
+    setState(() {
+      userData = users;
+    });
+  }
+
+
+  bool _validateLogin(String username1, String password1) {
+    for (var user in userData) {
+      if (user['username'] == username1 && user['password'] == password1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +112,11 @@ class _LoginPageState extends State<LoginPage> {
                                         prefixIcon: Icon(Icons.person, color: Colors.white),
                                         labelText: 'Username',
                                         labelStyle: TextStyle(color: Colors.white),
+                                        // Color del texto de error
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(15),
                                       ),
                                       style: TextStyle(color: Colors.white),
-                                      validator: (value) => _validations.validateUser(value),
                                     ),
                                   ),
                                   SizedBox(height: 20),
@@ -99,30 +147,20 @@ class _LoginPageState extends State<LoginPage> {
                                         contentPadding: EdgeInsets.all(15),
                                       ),
                                       style: TextStyle(color: Colors.white),
-                                      validator: (value) => _validations.validatePassword(value),
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 10.0),
-                                        child: Text(
-                                          'Forgot your password?',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+
                                   SizedBox(height: 40),
                                   ElevatedButton(
                                     onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
+                                      if(_validateLogin(_usernameController.text, _passwordController.text)){
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => TabBarCustom()),
                                         );
+                                      }else{
+                                        _showAlertDialog("Login invalid","Username or password incorrect");
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -188,9 +226,15 @@ class _LoginPageState extends State<LoginPage> {
                           top: 0,
                           child: CircleAvatar(
                             radius: 50.0,
-                            backgroundImage: AssetImage('images/Logo.png'),
+                            backgroundColor: Colors.transparent, // Color de fondo opcional
+                            child: Icon(
+                              Icons.account_circle,
+                              size: 100, // Ajusta el tamaño del icono según el radio del CircleAvatar
+                              color: Colors.white, // Ajusta el color del icono si es necesario
+                            ),
                           ),
                         ),
+
                       ],
                     ),
                   ],

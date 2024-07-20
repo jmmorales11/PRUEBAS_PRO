@@ -4,7 +4,7 @@ import 'dart:convert';
 class ApiService {
   static const String baseUrl = 'https://back-mascotas.vercel.app/bmpr/users'; // Cambié la URL base
 
-  static Future<Map> getUsers() async {
+  static Future<List<dynamic>> getUsers() async {
     final response = await http.get(Uri.parse('$baseUrl'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -12,18 +12,6 @@ class ApiService {
       throw Exception('Failed to load users');
     }
   }
-
-  /*static Future<void> addUser(Map<String, String> newUser) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/create'),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(newUser),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to add user');
-    }
-  }*/
 
   static Future<void> addUser(Map<String, dynamic> userData) async {
     final response = await http.post(
