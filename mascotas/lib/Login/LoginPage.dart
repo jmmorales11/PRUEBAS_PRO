@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mascotas/Register/RegisterPage.dart';
+import 'package:mascotas/RegisterUsers/RegisterPage.dart';
 import 'package:mascotas/widgets/tab_bar.dart';
 import '../Validations.dart';
 
@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                                       ),
-                                      child: Text('Register', style: TextStyle(color: Colors.white)),
+                                      child: Text('RegisterUsers', style: TextStyle(color: Colors.white)),
                                     ),
                                   ),
                                   SizedBox(height: 60),
