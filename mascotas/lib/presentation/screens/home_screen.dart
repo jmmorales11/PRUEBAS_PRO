@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
+import 'dart:typed_data'; // Añade esto para trabajar con los bytes de la imagen
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
+import 'dart:math'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,7 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
           return StaggeredGridTile.count(
             crossAxisCellCount: crossAxisCellCount,
             mainAxisCellCount: mainAxisCellCount,
-            child: ImageWidget(index: index, imageUrl: data[index]['imagen']),
+            child: ImageWidget(
+              index: index,
+              imageBase64: data[index]['imagen'], // Pasa la imagen en base64
+            ),
           );
         });
       });
@@ -69,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Stack(
             children: [
-              //Background(), // No tengo acceso a tu implementación de Background, así que la he comentado temporalmente
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: ListView(
@@ -102,17 +105,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class ImageWidget extends StatelessWidget {
   final int index;
-  final String imageUrl;
+  final String imageBase64;
 
-  const ImageWidget({super.key, required this.index, required this.imageUrl});
+  const ImageWidget({super.key, required this.index, required this.imageBase64});
 
   @override
   Widget build(BuildContext context) {
+    // Decodifica la imagen base64 a bytes
+    final Uint8List imageBytes = base64Decode(imageBase64);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        imageUrl,
-        scale: 1,
+      child: Image.memory(
+        imageBytes,
         fit: BoxFit.cover,
       ),
     );
