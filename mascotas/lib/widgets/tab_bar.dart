@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:mascotas/Login/LoginPage.dart';
 import 'package:mascotas/mascotas/MascotasPage.dart';
 import 'package:mascotas/mascotas/registrar_mascota.dart';
 import 'package:mascotas/presentation/screens/ejemplo_screen.dart';
-import 'package:mascotas/presentation/screens/home_screen.dart';
+import 'package:mascotas/presentation/screens/home_screen.dart'; // Asegúrate de importar la página de inicio de sesión
 
 class TabBarCustom extends StatefulWidget {
   const TabBarCustom({super.key});
@@ -21,12 +22,12 @@ class _TabBarCustomState extends State<TabBarCustom> {
   // Lista de estados de selección para los íconos
   List<bool> isSelected = [true, false, false, false];
 
-  //Screen para navegación
+  // Screen para navegación
   final List<Widget> _screens = [
     const HomeScreen(),
     const EjemploScreen(),
     MascotasPage(),
-    const EjemploScreen(), // Puedes ajustar esta lista según tus necesidades
+    const EjemploScreen(),
   ];
 
   @override
@@ -47,28 +48,39 @@ class _TabBarCustomState extends State<TabBarCustom> {
         backgroundColor: const Color.fromARGB(255, 25, 23, 61),
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 600),
-        onTap: (index) {
-          setState(() {
-            _page = index;
-            // Actualiza el estado de selección de los íconos
-            for (int i = 0; i < isSelected.length; i++) {
-              isSelected[i] = (i == index);
+        onTap: (index) async {
+          if (index == _screens.length - 1) {
+            // Muestra un diálogo de confirmación
+            bool? shouldExit = await _showExitConfirmationDialog(context);
+            if (shouldExit == true) {
+              // Si el usuario confirma, redirige a la página de inicio de sesión
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
             }
-          });
+          } else {
+            setState(() {
+              _page = index;
+              // Actualiza el estado de selección de los íconos
+              for (int i = 0; i < isSelected.length; i++) {
+                isSelected[i] = (i == index);
+              }
+            });
+          }
         },
         letIndexChange: (index) => true,
       ),
       body: Container(
         color: Color.fromARGB(255, 25, 23, 61),
         child: Center(
-          child: _screens[
-              _page], // Muestra la pantalla correspondiente al índice seleccionado
+          child: _screens[_page], // Muestra la pantalla correspondiente al índice seleccionado
         ),
       ),
     );
   }
 
-  //widget icons
+  // Widget icons
   Widget _buildIcon(IconData icon, bool isSelected) {
     Color iconColor = isSelected ? colorIcon : Colors.grey; // Color del ícono
     List<BoxShadow> iconShadow = isSelected
@@ -83,6 +95,32 @@ class _TabBarCustomState extends State<TabBarCustom> {
         boxShadow: iconShadow,
       ),
       child: Icon(icon, size: 30, color: iconColor),
+    );
+  }
+
+  Future<bool?> _showExitConfirmationDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Confirmar salida'),
+          content: Text('¿Estás seguro de que deseas salir?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // No salir
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Salir
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
