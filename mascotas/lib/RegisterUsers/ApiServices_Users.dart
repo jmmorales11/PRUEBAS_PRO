@@ -2,10 +2,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:4000/bmpr/users'; // Cambié la URL base
+  static const String baseUrl = 'https://back-mascotas.vercel.app/bmpr/users'; // Cambié la URL base
 
   static Future<Map> getUsers() async {
-    final response = await http.get(Uri.parse('$baseUrl')); // Cambié la URL
+    final response = await http.get(Uri.parse('$baseUrl'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -15,7 +15,7 @@ class ApiService {
 
   static Future<void> addUser(Map<String, String> newUser) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/create'), // Cambié la URL para que apunte al endpoint correcto
+      Uri.parse('$baseUrl/create'),
       headers: {"Content-Type": "application/json"},
       body: json.encode(newUser),
     );
