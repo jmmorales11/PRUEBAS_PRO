@@ -59,7 +59,6 @@ class _RegisterPageState extends State<RegisterPage> {
     //getUsers();
   }
 
-
   Future<void> getUsers() async {
     data = await ApiService.getUsers();
     setState(() {
@@ -529,17 +528,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                         if (_formKey.currentState!.validate()) {
                                           ApiService.addUser({
                                             'firstName': _nameController.text,
-                                            'lastName': _lastNameController.text,
-                                            'phoneNumber': _phoneNumberController.text,
+                                            'lastName':
+                                                _lastNameController.text,
+                                            'phoneNumber':
+                                                _phoneNumberController.text,
                                             'email': _emailController.text,
-                                            'dateBirthday': _dateController.text,
-                                            'username': _usernameController.text,
-                                            'password': _passwordController.text,
+                                            'dateBirthday':
+                                                _dateController.text,
+                                            'username':
+                                                _usernameController.text,
+                                            'password':
+                                                _passwordController.text,
                                           }).then((_) {
                                             getUsers();
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => LoginPage()),
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage()),
                                             );
                                           }).catchError((error) {
                                             // Manejo de errores
