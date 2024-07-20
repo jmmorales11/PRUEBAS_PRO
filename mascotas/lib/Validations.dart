@@ -3,13 +3,12 @@ import 'RegisterUsers/ApiServices_Users.dart';
 class Validations {
   late List userData = [];
 
-  // Asegúrate de que los datos se carguen
   Validations() {
     getUsers();
   }
 
   Future<void> getUsers() async {
-    final List<dynamic> users = await ApiService.getUsers(); // Obtener una lista de usuarios
+    final List<dynamic> users = await ApiService.getUsers();
     userData = users;
   }
 
@@ -42,7 +41,7 @@ class Validations {
 
 
   //VALIDA NOMBRE DE PERSONAS
-  // Verificar que solo contenga letras y tenga entre 2 y 10 caracteres
+// Verificar que solo contenga letras y tenga entre 2 y 10 caracteres
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return "Name cannot be empty";
@@ -50,13 +49,14 @@ class Validations {
     value = value.trim();
 
     // Verificar que solo contenga letras y tenga entre 2 y 10 caracteres
-    String pattern = r'^[A-Z][a-zA-ZñÑ]{2,9}$';
+    String pattern = r"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñA-ZÁÉÍÓÚÜÑ]{1,9}$";
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return "Only letters, between 5 to 10 characters and first capital letter.";
+      return "Only letters, between 2 to 10 characters, and the first letter must be capitalized.";
     }
     return null;
   }
+
 
   //VALIDA CONTRASEÑA
   //Ingresa lo que quiera, minimo 6 caracteres
@@ -112,6 +112,34 @@ class Validations {
     if (value != originalPassword) {
       return "Passwords do not match";
     }
+    return null;
+  }
+
+
+  /*------------------------------------------------------------------------------------*/
+//VALIDACIONES MASCOTAS FORMULARIOS
+// VALIDA NOMBRE MASCOTA/ RAZA/ COLOR PELAJE
+  String? validateOnlyLetters(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Name cannot be empty";
+    }
+    value = value.trim();
+
+    // Expresión regular para permitir letras (con tildes), números y espacios, pero no caracteres especiales
+    String pattern = r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s]+$";
+    RegExp regExp = RegExp(pattern);
+    if (!regExp.hasMatch(value)) {
+      return "Only letters (including tildes), numbers, and spaces are allowed.";
+    }
+    return null;
+  }
+
+
+  String? validateDescription(String? value) {
+    if (value == null || value.isEmpty) {
+      return "        Name cannot be empty";
+    }
+    value = value.trim();
     return null;
   }
 }

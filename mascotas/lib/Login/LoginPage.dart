@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> getUsers() async {
-    final List<dynamic> users = await ApiService.getUsers(); // Obtener una lista de usuarios
+    final List<dynamic> users = await ApiService.getUsers();
     setState(() {
       userData = users;
     });

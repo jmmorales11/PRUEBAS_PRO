@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io' as io;
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
+import '../Validations.dart';
+
 
 class RegistrarMascota extends StatefulWidget {
   const RegistrarMascota({super.key});
@@ -18,6 +20,7 @@ class RegistrarMascota extends StatefulWidget {
 
 class _RegistrarMascotaState extends State<RegistrarMascota> {
   final _formKey = GlobalKey<FormState>();
+  final Validations _validations = Validations();
   final TextEditingController _nombre_mas = TextEditingController();
   final TextEditingController _raza = TextEditingController();
   final TextEditingController _sexo = TextEditingController();
@@ -39,6 +42,14 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
   List<String?> imagePaths = List.filled(3, null);
   List<String?> imageBase = List.filled(3, null);
   String? imagePath; // Ruta de la imagen seleccionada
+
+  //manejo de errores
+  String? _nameMascotaError;
+  String? _razaError;
+  String? _colorPelajeError;
+  String? _tipoMascotaError;
+  String? _descriptionError;
+
 
   final ImagePicker _picker = ImagePicker();
 
@@ -117,7 +128,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != DateTime.now()) {
       setState(() {
@@ -205,6 +216,27 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
         }
       }
     }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
+          title: Text(title, style: TextStyle(color: Colors.white),),
+          content: Text(message, style: TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -314,387 +346,472 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                   ),
                   Container(
                     child: Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextField(
-                              controller: _nombre_mas,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Nombre Mascota',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
                               ),
-                              style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextField(
-                              controller: _raza,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Raza',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
+                              width: 400,
+                              child: TextFormField(
+                                controller: _nombre_mas,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'ingresa el nombre de tu mascota',
+                                  hintStyle:
+                                  TextStyle(color: Colors.white54),
+                                  labelText: 'Nombre Mascota',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                      Icons.pets,
+                                      color: Colors.white,
+                                    ),
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent),
+                                  // Color del texto de error
+                                  errorText: _nameMascotaError,
+                                  suffixIcon: _nameMascotaError != null
+                                      ? Icon(Icons.error,
+                                      color: Colors.redAccent)
+                                      : null,
                                 ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: DropdownButtonFormField<String>(
-                              value: sexoSeleccionado,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
+                                style: TextStyle(color: Colors.white),
+                                onChanged: (value) {
                                   setState(() {
-                                    sexoSeleccionado = newValue;
+                                    _nameMascotaError = _validations.validateOnlyLetters(value);
                                   });
-                                }
-                              },
-                              items: <String>[
-                                'Macho',
-                                'Hembra'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(color: Colors.white),
+                                },
+                                validator: (value) =>
+                                    _validations.validateOnlyLetters(value),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: TextFormField(
+                                controller: _raza,
+                                decoration: InputDecoration(
+                                  hintText: 'ingresa la raza de tu mascota',
+                                  hintStyle:
+                                  TextStyle(color: Colors.white54),
+                                  border: InputBorder.none,
+                                  labelText: 'Raza',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.pets,
+                                    color: Colors.white,
                                   ),
-                                );
-                              }).toList(),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Sexo',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent),
+                                  // Color del texto de error
+                                  errorText: _razaError,
+                                  suffixIcon: _razaError != null
+                                      ? Icon(Icons.error,
+                                      color: Colors.redAccent)
+                                      : null,
                                 ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              dropdownColor:
-                                  Colors.black, // Fondo negro para las opciones
-                            ),
-                          ),
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(30),
-                          //     border: Border.all(
-                          //         color: Color.fromARGB(240, 22, 61, 96),
-                          //         width: 2),
-                          //     color: const Color.fromARGB(61, 0, 0, 0),
-                          //   ),
-                          //   width: 400,
-                          //   child: TextField(
-                          //     controller: _sexo,
-                          //     decoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       labelText: 'Sexo',
-                          //       labelStyle: TextStyle(color: Colors.white),
-                          //       prefixIcon: Icon(
-                          //         Icons.person,
-                          //         color: Colors.white,
-                          //       ),
-                          //     ),
-                          //     style: TextStyle(color: Colors.white),
-                          //     keyboardType: TextInputType.name,
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                color: Color.fromARGB(240, 22, 61, 96),
-                                width: 2,
-                              ),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextFormField(
-                              controller: _fecha_nac,
-                              readOnly: true,
-                              onTap: () => _selectDate(context),
-                              decoration: InputDecoration(
-                                labelText: 'Fecha de nacimiento',
-                                border: InputBorder.none,
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.calendar_today,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextField(
-                              controller: _color,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Color del pelaje',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextField(
-                              controller: _tipo,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Tipo de mascota',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: DropdownButtonFormField<String>(
-                              value: privacidad,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  privacidad = newValue!;
-                                });
-                              },
-                              items: <String>[
-                                'Privado',
-                                'Público'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                );
-                              }).toList(),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Privacidad',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              dropdownColor:
-                                  Colors.black, // Fondo negro para las opciones
-                            ),
-                          ),
-
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(30),
-                          //     border: Border.all(
-                          //         color: Color.fromARGB(240, 22, 61, 96),
-                          //         width: 2),
-                          //     color: const Color.fromARGB(61, 0, 0, 0),
-                          //   ),
-                          //   width: 400,
-                          //   child: TextField(
-                          //     controller: _privacidad,
-                          //     decoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       labelText: 'Privacidad',
-                          //       labelStyle: TextStyle(color: Colors.white),
-                          //       prefixIcon: Icon(
-                          //         Icons.person,
-                          //         color: Colors.white,
-                          //       ),
-                          //     ),
-                          //     style: TextStyle(color: Colors.white),
-                          //     keyboardType: TextInputType.name,
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  color: Color.fromARGB(240, 22, 61, 96),
-                                  width: 2),
-                              color: const Color.fromARGB(61, 0, 0, 0),
-                            ),
-                            width: 400,
-                            child: TextField(
-                              controller: _descripcion,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Descripcion',
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: TextStyle(color: Colors.white),
-                              keyboardType: TextInputType.name,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 55, vertical: 10),
-
-                              backgroundColor: Color.fromARGB(
-                                  60, 23, 68, 165), // Color de fondo
-
-                              shadowColor: const Color.fromARGB(
-                                  61, 0, 0, 0), // Color de la sombra
-                              elevation: 5, // Tamaño de la sombra
-                              side: BorderSide(
-                                color: Color.fromARGB(
-                                    239, 40, 125, 199), // Color del borde
-                                width: 2, // Ancho del borde
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    17), // Bordes redondeados
+                                style: TextStyle(color: Colors.white),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _razaError = _validations.validateOnlyLetters(value);
+                                  });
+                                },
+                                validator: (value) =>
+                                    _validations.validateOnlyLetters(value),
                               ),
                             ),
-                            onPressed: () async {
-                              // Call _convertImageToBase64 and wait for it to complete
-
-                              // Insertar imagnes
-                              if (images[0] != null ||
-                                  images[1] != null ||
-                                  images[2] != null) {
-                                await _convertImageToBase64();
-                                for (var image in imageBase) {
-                                  if (image != null) {
-                                    print(
-                                        "Enviando imagen a la API: ${image.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
-                                    await postImage(
-                                        image, _nombre_mas.text, privacidad);
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: DropdownButtonFormField<String>(
+                                value: sexoSeleccionado,
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    setState(() {
+                                      sexoSeleccionado = newValue;
+                                    });
                                   }
-                                }
-                              }
-                              print("Fecha de Nacimiento: ${_fecha_nac.text}");
-
-                              print("Privacidad: ${privacidad}");
-
-                              postMascota(
-                                  _nombre_mas.text,
-                                  _raza.text,
-                                  sexoSeleccionado,
-                                  _fecha_nac.text,
-                                  _color.text,
-                                  _tipo.text,
-                                  privacidad,
-                                  _descripcion.text,
-                                  "Marley");
-                              setState(() {
-                                images = List.filled(3, null);
-                                imagePaths = List.filled(3, null);
-                                imageBase = List.filled(3, null);
-                                contador = 0; // Reset the counter
-                              });
-
-                              //   }
-                            },
-                            child: Text(
-                              'Insertar',
-                              style: TextStyle(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255),
-                                  fontSize: 20),
+                                },
+                                items: <String>[
+                                  'Macho',
+                                  'Hembra'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Sexo',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: TextStyle(color: Colors.white),
+                                dropdownColor:
+                                Colors.black, // Fondo negro para las opciones
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(30),
+                            //     border: Border.all(
+                            //         color: Color.fromARGB(240, 22, 61, 96),
+                            //         width: 2),
+                            //     color: const Color.fromARGB(61, 0, 0, 0),
+                            //   ),
+                            //   width: 400,
+                            //   child: TextFormField(
+                            //     controller: _sexo,
+                            //     decoration: InputDecoration(
+                            //       border: InputBorder.none,
+                            //       labelText: 'Sexo',
+                            //       labelStyle: TextStyle(color: Colors.white),
+                            //       prefixIcon: Icon(
+                            //         Icons.person,
+                            //         color: Colors.white,
+                            //       ),
+                            //     ),
+                            //     style: TextStyle(color: Colors.white),
+                            //     keyboardType: TextInputType.name,
+                            //   ),
+                            // ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: Color.fromARGB(240, 22, 61, 96),
+                                  width: 2,
+                                ),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: TextFormField(
+                                controller: _fecha_nac,
+                                readOnly: true,
+                                onTap: () => _selectDate(context),
+                                decoration: InputDecoration(
+                                  labelText: 'Fecha de nacimiento',
+                                  border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: TextFormField(
+                                controller: _color,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Color del pelaje',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.color_lens_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent),
+                                  // Color del texto de error
+                                  errorText: _colorPelajeError,
+                                  suffixIcon: _colorPelajeError != null
+                                      ? Icon(Icons.error,
+                                      color: Colors.redAccent)
+                                      : null,
+                                ),
+                                style: TextStyle(color: Colors.white),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _colorPelajeError = _validations.validateOnlyLetters(value);
+                                  });
+                                },
+                                validator: (value) =>
+                                    _validations.validateOnlyLetters(value),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: TextFormField(
+                                controller: _tipo,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Tipo de mascota',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.pets,
+                                    color: Colors.white,
+                                  ),
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent),
+                                  // Color del texto de error
+                                  errorText: _tipoMascotaError,
+                                  suffixIcon: _tipoMascotaError != null
+                                      ? Icon(Icons.error,
+                                      color: Colors.redAccent)
+                                      : null,
+                                ),
+                                style: TextStyle(color: Colors.white),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _tipoMascotaError = _validations.validateOnlyLetters(value);
+                                  });
+                                },
+                                validator: (value) =>
+                                    _validations.validateOnlyLetters(value),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: DropdownButtonFormField<String>(
+                                value: privacidad,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    privacidad = newValue!;
+                                  });
+                                },
+                                items: <String>[
+                                  'Privado',
+                                  'Público'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Privacidad',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: TextStyle(color: Colors.white),
+                                dropdownColor:
+                                Colors.black, // Fondo negro para las opciones
+                              ),
+                            ),
+
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(30),
+                            //     border: Border.all(
+                            //         color: Color.fromARGB(240, 22, 61, 96),
+                            //         width: 2),
+                            //     color: const Color.fromARGB(61, 0, 0, 0),
+                            //   ),
+                            //   width: 400,
+                            //   child: TextFormField(
+                            //     controller: _privacidad,
+                            //     decoration: InputDecoration(
+                            //       border: InputBorder.none,
+                            //       labelText: 'Privacidad',
+                            //       labelStyle: TextStyle(color: Colors.white),
+                            //       prefixIcon: Icon(
+                            //         Icons.person,
+                            //         color: Colors.white,
+                            //       ),
+                            //     ),
+                            //     style: TextStyle(color: Colors.white),
+                            //     keyboardType: TextInputType.name,
+                            //   ),
+                            // ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    color: Color.fromARGB(240, 22, 61, 96),
+                                    width: 2),
+                                color: const Color.fromARGB(61, 0, 0, 0),
+                              ),
+                              width: 400,
+                              child: TextFormField(
+                                controller: _descripcion,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Descripcion',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.pets,
+                                    color: Colors.white,
+                                  ),
+                                  errorStyle: TextStyle(
+                                      color: Colors.redAccent),
+                                  // Color del texto de error
+                                  errorText: _descriptionError,
+                                  suffixIcon: _descriptionError != null
+                                      ? Icon(Icons.error,
+                                      color: Colors.redAccent)
+                                      : null,
+                                ),
+                                style: TextStyle(color: Colors.white),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _descriptionError = _validations.validateDescription(value);
+                                  });
+                                },
+                                validator: (value) =>
+                                    _validations.validateDescription(value),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 55, vertical: 10),
+
+                                backgroundColor: Color.fromARGB(
+                                    60, 23, 68, 165), // Color de fondo
+
+                                shadowColor: const Color.fromARGB(
+                                    61, 0, 0, 0), // Color de la sombra
+                                elevation: 5, // Tamaño de la sombra
+                                side: BorderSide(
+                                  color: Color.fromARGB(
+                                      239, 40, 125, 199), // Color del borde
+                                  width: 2, // Ancho del borde
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      17), // Bordes redondeados
+                                ),
+                              ),
+                              onPressed: () async {
+
+                                if(_formKey.currentState!.validate()){
+                                  // Call _convertImageToBase64 and wait for it to complete
+
+                                  // Insertar imagnes
+                                  if (images[0] != null ||
+                                      images[1] != null ||
+                                      images[2] != null) {
+                                    await _convertImageToBase64();
+                                    for (var image in imageBase) {
+                                      if (image != null) {
+                                        print(
+                                            "Enviando imagen a la API: ${image.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
+                                        await postImage(
+                                            image, _nombre_mas.text, privacidad);
+                                      }
+                                    }
+                                  }
+                                  print("Fecha de Nacimiento: ${_fecha_nac.text}");
+
+                                  print("Privacidad: ${privacidad}");
+
+                                  postMascota(
+                                      _nombre_mas.text,
+                                      _raza.text,
+                                      sexoSeleccionado,
+                                      _fecha_nac.text,
+                                      _color.text,
+                                      _tipo.text,
+                                      privacidad,
+                                      _descripcion.text,
+                                      "Marley");
+                                  setState(() {
+                                    images = List.filled(3, null);
+                                    imagePaths = List.filled(3, null);
+                                    imageBase = List.filled(3, null);
+                                    contador = 0; // Reset the counter
+                                  });
+
+                                  //   }
+                                }else{
+                                  _showAlertDialog("Register invalid", "Form incompleted");
+
+                                }
+                              },
+                              child: Text(
+                                'Insertar',
+                                style: TextStyle(
+                                    color:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                    fontSize: 20),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )
