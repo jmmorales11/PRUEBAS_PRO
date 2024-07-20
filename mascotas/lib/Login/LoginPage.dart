@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mascotas/RegisterUsers/RegisterPage.dart';
 import 'package:mascotas/widgets/tab_bar.dart';
 import '../RegisterUsers/ApiServices_Users.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,6 +34,10 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<void> _storeUserData(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+  }
 
   bool _validateLogin(String username1, String password1) {
     for (var user in userData) {
@@ -153,10 +159,10 @@ class _LoginPageState extends State<LoginPage> {
 
                                   SizedBox(height: 40),
                                   ElevatedButton(
-                                    onPressed: () {
-
+                                    onPressed: () async {
                                       if(_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
                                         if(_validateLogin(_usernameController.text, _passwordController.text)){
+                                          await _storeUserData(_usernameController.text);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(builder: (context) => TabBarCustom()),

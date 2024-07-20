@@ -53,6 +53,11 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
 
   final ImagePicker _picker = ImagePicker();
 
+  Future<String?> _getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
   Future<void> postImage(String image, String nombre, String privacidad) async {
     try {
       final response = await http.post(
@@ -82,7 +87,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
       String tipo,
       String privacidad,
       String descripcion,
-      String user) async {
+      String username) async {
     try {
       final response = await http.post(
         Uri.parse('https://back-mascotas.vercel.app/bmpr/mascotas/crear'),
@@ -95,7 +100,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
           'tipo': tipo,
           'privacidad': privacidad,
           'descripcion': descripcion,
-          'user': user
+          'user': username
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -754,29 +759,26 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 ),
                               ),
                               onPressed: () async {
-
-                                if(_formKey.currentState!.validate()){
+                                if (_formKey.currentState!.validate()) {
                                   // Call _convertImageToBase64 and wait for it to complete
 
-                                  // Insertar imagnes
-                                  if (images[0] != null ||
-                                      images[1] != null ||
-                                      images[2] != null) {
+                                  // Insertar imágenes
+                                  if (images[0] != null || images[1] != null || images[2] != null) {
                                     await _convertImageToBase64();
                                     for (var image in imageBase) {
                                       if (image != null) {
-                                        print(
-                                            "Enviando imagen a la API: ${image.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
-                                        await postImage(
-                                            image, _nombre_mas.text, privacidad);
+                                        print("Enviando imagen a la API: ${image.substring(0, 100)}...");
+                                        await postImage(image, _nombre_mas.text, privacidad);
                                       }
                                     }
                                   }
-                                  print("Fecha de Nacimiento: ${_fecha_nac.text}");
 
+                                  print("Fecha de Nacimiento: ${_fecha_nac.text}");
                                   print("Privacidad: ${privacidad}");
 
-                                  postMascota(
+                                  String? username = await _getUsername();
+                                  if (username != null) {
+                                    await postMascota(
                                       _nombre_mas.text,
                                       _raza.text,
                                       sexoSeleccionado,
@@ -785,20 +787,22 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                       _tipo.text,
                                       privacidad,
                                       _descripcion.text,
-                                      "Marley");
-                                  setState(() {
-                                    images = List.filled(3, null);
-                                    imagePaths = List.filled(3, null);
-                                    imageBase = List.filled(3, null);
-                                    contador = 0; // Reset the counter
-                                  });
-
-                                  //   }
-                                }else{
+                                      username,
+                                    );
+                                    setState(() {
+                                      images = List.filled(3, null);
+                                      imagePaths = List.filled(3, null);
+                                      imageBase = List.filled(3, null);
+                                      contador = 0; // Reset the counter
+                                    });
+                                  } else {
+                                    _showAlertDialog("Error", "Username not found.");
+                                  }
+                                } else {
                                   _showAlertDialog("Register invalid", "Form incompleted");
-
                                 }
                               },
+
                               child: Text(
                                 'Insertar',
                                 style: TextStyle(
