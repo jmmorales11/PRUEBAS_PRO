@@ -1,13 +1,17 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:io' as io;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mascotas/Login/LoginPage.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Validations.dart';
 import 'ApiServices_Users.dart';
+import 'package:image/image.dart' as img;
+
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -23,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   final Validations _validations = Validations();
 
@@ -53,10 +58,91 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  /*MANJEO DE INSERTAR IMAGEN*/
+  io.File? _image;
+  String? imagePath;
+  String? imageBase64; // Variable para almacenar la imagen en base64
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _openCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _image = io.File(pickedFile.path);
+        imagePath = pickedFile.path;
+      });
+      _saveImagePath(pickedFile.path);
+    }
+  }
+
+  Future<void> _openGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = io.File(pickedFile.path);
+        imagePath = pickedFile.path;
+      });
+      _saveImagePath(pickedFile.path);
+    }
+  }
+
+  Future<void> _saveImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('imagePath', path);
+  }
+
+  Future<void> _loadImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    final path = prefs.getString('imagePath');
+    if (path != null) {
+      setState(() {
+        imagePath = path;
+        if (kIsWeb) {
+          _image = io.File(path);
+        }
+      });
+    }
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Seleccione una opción'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.camera),
+                title: Text('Abrir cámara'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _openCamera();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_album),
+                title: Text('Abrir galería'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _openGallery();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /*--------------------------------------------------------------------------*/
+
+
   @override
   void initState() {
     super.initState();
-    //getUsers();
+    _loadImagePath();
   }
 
   Future<void> getUsers() async {
@@ -65,6 +151,24 @@ class _RegisterPageState extends State<RegisterPage> {
       userData = data['users'];
     });
   }
+
+  //TRANSFORMAR LA IMAGEN A BASE64
+  Future<void> _convertImageToBase64() async {
+    if (_image != null) {
+      List<int> imageBytes = await _image!.readAsBytes();
+      Uint8List uint8ImageBytes = Uint8List.fromList(imageBytes);
+      img.Image? image = img.decodeImage(uint8ImageBytes);
+
+      if (image != null) {
+        img.Image resizedImage = img.copyResize(image, width: 600);
+        List<int> compressedImageBytes = img.encodeJpg(resizedImage, quality: 50);
+        imageBase64 = base64Encode(compressedImageBytes);
+
+        print("Imagen en Base64: ${imageBase64!.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -524,28 +628,29 @@ class _RegisterPageState extends State<RegisterPage> {
                                   SizedBox(height: 20),
                                   Container(
                                     child: ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          ApiService.addUser({
+                                          // Convertir la imagen a base64 antes de enviar la solicitud
+                                          await _convertImageToBase64();
+
+                                          // Crear un mapa con los datos del formulario
+                                          final userData = {
                                             'firstName': _nameController.text,
-                                            'lastName':
-                                                _lastNameController.text,
-                                            'phoneNumber':
-                                                _phoneNumberController.text,
+                                            'lastName': _lastNameController.text,
+                                            'phoneNumber': _phoneNumberController.text,
                                             'email': _emailController.text,
-                                            'dateBirthday':
-                                                _dateController.text,
-                                            'username':
-                                                _usernameController.text,
-                                            'password':
-                                                _passwordController.text,
-                                          }).then((_) {
+                                            'dateBirthday': _dateController.text,
+                                            'username': _usernameController.text,
+                                            'password': _passwordController.text,
+                                            'userPicture': imageBase64, // Añadir la imagen en base64
+                                          };
+
+                                          // Enviar los datos a la API
+                                          ApiService.addUser(userData).then((_) {
                                             getUsers();
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      LoginPage()),
+                                              MaterialPageRoute(builder: (context) => LoginPage()),
                                             );
                                           }).catchError((error) {
                                             // Manejo de errores
@@ -556,17 +661,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color(0xFF1f4a71),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                                          borderRadius: BorderRadius.circular(20),
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 50, vertical: 15),
+                                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                                       ),
-                                      child: Text('Save',
-                                          style:
-                                              TextStyle(color: Colors.white)),
+                                      child: Text('Save', style: TextStyle(color: Colors.white)),
                                     ),
                                   ),
+
                                 ],
                               ),
                             ),
@@ -576,18 +678,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           left: MediaQuery.of(context).size.width / 2 - 60,
                           top: 0,
                           child: GestureDetector(
-                            // onTap: () => _getImage(),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              padding: EdgeInsets.all(10),
-                              child: Icon(
-                                Icons.add_a_photo,
-                                size: 100,
-                                color: Colors.white,
-                              ),
+                            onTap: () async {
+                              _showImageSourceActionSheet(context);
+                              // Convertir la imagen a base64 después de que el usuario haya seleccionado una imagen
+                              await _convertImageToBase64();
+                            },
+                            child: _image == null
+                                ? Icon(
+                              Icons.add_a_photo,
+                              size: 100,
+                              color: Colors.white,
+                            )
+                                : CircleAvatar(
+                              radius: 50,
+                              backgroundImage: FileImage(_image!),
                             ),
                           ),
                         ),

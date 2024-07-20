@@ -13,11 +13,25 @@ class ApiService {
     }
   }
 
-  static Future<void> addUser(Map<String, String> newUser) async {
+  /*static Future<void> addUser(Map<String, String> newUser) async {
     final response = await http.post(
       Uri.parse('$baseUrl/create'),
       headers: {"Content-Type": "application/json"},
       body: json.encode(newUser),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add user');
+    }
+  }*/
+
+  static Future<void> addUser(Map<String, dynamic> userData) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/create'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(userData),
     );
 
     if (response.statusCode != 200) {
