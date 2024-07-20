@@ -48,11 +48,12 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
-          content: Text(message),
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
+          title: Text(title, style: TextStyle(color: Colors.white),),
+          content: Text(message, style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: Text('Ok', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -62,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
 
 
   @override
@@ -154,13 +154,18 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(height: 40),
                                   ElevatedButton(
                                     onPressed: () {
-                                      if(_validateLogin(_usernameController.text, _passwordController.text)){
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => TabBarCustom()),
-                                        );
+
+                                      if(_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
+                                        if(_validateLogin(_usernameController.text, _passwordController.text)){
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => TabBarCustom()),
+                                          );
+                                        }else{
+                                          _showAlertDialog("Login invalid","Username or password incorrect");
+                                        }
                                       }else{
-                                        _showAlertDialog("Login invalid","Username or password incorrect");
+                                        _showAlertDialog("Login invalid", "Texfield empty");
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(

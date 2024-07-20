@@ -143,6 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
     _loadImagePath();
+    getUsers();
   }
 
   Future<void> getUsers() async {
@@ -168,6 +169,27 @@ class _RegisterPageState extends State<RegisterPage> {
         print("Imagen en Base64: ${imageBase64!.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
       }
     }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
+          title: Text(title, style: TextStyle(color: Colors.white),),
+          content: Text(message, style: TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
@@ -631,32 +653,54 @@ class _RegisterPageState extends State<RegisterPage> {
                                     child: ElevatedButton(
                                       onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          // Convertir la imagen a base64 antes de enviar la solicitud
-                                          await _convertImageToBase64();
+                                          // Validación asíncrona del nombre de usuario
+                                          String? usernameExistsError = await _validations.validateUserExists(_usernameController.text);
+                                          if (usernameExistsError != null) {
+                                            setState(() {
+                                              _usernameError = usernameExistsError;
+                                            });
+                                            _showAlertDialog("Register invalid", "Username already exists");
+                                          } else {
+                                            setState(() {
+                                              _usernameError = null;
+                                            });
 
-                                          // Crear un mapa con los datos del formulario
-                                          final userData = {
-                                            'firstName': _nameController.text,
-                                            'lastName': _lastNameController.text,
-                                            'phoneNumber': _phoneNumberController.text,
-                                            'email': _emailController.text,
-                                            'dateBirthday': _dateController.text,
-                                            'username': _usernameController.text,
-                                            'password': _passwordController.text,
-                                            'userPicture': imageBase64, // Añadir la imagen en base64
-                                          };
+                                            // Verificar si se ha seleccionado una imagen
+                                            if (_image == null) {
+                                              _showAlertDialog("Register invalid", "Please select a profile picture");
+                                              return;
+                                            }
 
-                                          // Enviar los datos a la API
-                                          ApiService.addUser(userData).then((_) {
-                                            getUsers();
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => LoginPage()),
-                                            );
-                                          }).catchError((error) {
-                                            // Manejo de errores
-                                            print(error);
-                                          });
+                                            // Convertir la imagen a base64 antes de enviar la solicitud
+                                            await _convertImageToBase64();
+
+                                            // Crear un mapa con los datos del formulario
+                                            final userData = {
+                                              'firstName': _nameController.text,
+                                              'lastName': _lastNameController.text,
+                                              'phoneNumber': _phoneNumberController.text,
+                                              'email': _emailController.text,
+                                              'dateBirthday': _dateController.text,
+                                              'username': _usernameController.text,
+                                              'password': _passwordController.text,
+                                              'userPicture': imageBase64, // Añadir la imagen en base64
+                                            };
+
+                                            // Enviar los datos a la API
+                                            ApiService.addUser(userData).then((_) {
+                                              getUsers();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => LoginPage()),
+                                              );
+                                            }).catchError((error) {
+                                              // Manejo de errores
+                                              print(error);
+                                              _showAlertDialog("Error", "Failed to register user. Please try again.");
+                                            });
+                                          }
+                                        } else {
+                                          _showAlertDialog("Register invalid", "Form incompleted");
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(

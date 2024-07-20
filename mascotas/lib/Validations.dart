@@ -1,6 +1,20 @@
+import 'RegisterUsers/ApiServices_Users.dart';
+
 class Validations {
-  //VALIDA USUARIO DE PERSONAS
-  //verificamos solo ingreso de letras y numeros de 5 a 10 caracteres
+  late List userData = [];
+
+  // Asegúrate de que los datos se carguen
+  Validations() {
+    getUsers();
+  }
+
+  Future<void> getUsers() async {
+    final List<dynamic> users = await ApiService.getUsers(); // Obtener una lista de usuarios
+    userData = users;
+  }
+
+  // VALIDA USUARIO DE PERSONAS
+  // verificamos solo ingreso de letras y números de 5 a 10 caracteres
   String? validateUser(String? value) {
     if (value == null || value.isEmpty) {
       return "Username cannot be empty";
@@ -9,7 +23,20 @@ class Validations {
     if (!RegExp(r'^[a-zA-Z0-9]{5,10}$').hasMatch(value)) {
       return "Only letters and numbers, between 5 to 10 characters.";
     }
+    return null;
+  }
 
+  // VALIDA SI EL USUARIO EXISTE
+  Future<String?> validateUserExists(String? value) async {
+    if (value == null || value.isEmpty) {
+      return "Username cannot be empty";
+    }
+    await getUsers();
+    for (var user in userData) {
+      if (user['username'] == value) {
+        return "Username already exists";
+      }
+    }
     return null;
   }
 
