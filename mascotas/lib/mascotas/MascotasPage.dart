@@ -75,6 +75,9 @@ class _MascotasPageState extends State<MascotasPage> {
         ),
         child: Column(
           children: [
+            SizedBox(
+              height: 25,
+            ),
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),

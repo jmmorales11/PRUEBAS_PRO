@@ -196,6 +196,30 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future<void> _hideLoadingDialog(BuildContext context) async {
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _showLoadingDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // No permite que el diálogo se cierre tocando fuera de él
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Cargando..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -741,6 +765,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                       Container(
                                         child: ElevatedButton(
                                           onPressed: () async {
+                                            ///////////////////
+                                            //_showLoadingDialog(context); DEXOMENTAS ES PARA CARGAR PERO ESTAN MAS VALIDADIONES ASI QUE LE CMABIE PERO PRUEB PA QUE VEAS QUE ES
                                             if (_formKey.currentState!
                                                 .validate()) {
                                               // Validación asíncrona del nombre de usuario
@@ -798,6 +824,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 ApiService.addUser(userData)
                                                     .then((_) {
                                                   getUsers();
+
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(

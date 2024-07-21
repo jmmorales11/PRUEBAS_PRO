@@ -9,6 +9,7 @@ import 'dart:io' as io;
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import '../Validations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegistrarMascota extends StatefulWidget {
   const RegistrarMascota({super.key});
@@ -207,17 +208,50 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
         img.Image? image = img.decodeImage(uint8ImageBytes);
 
         if (image != null) {
+          // Redimensiona la imagen
           img.Image resizedImage = img.copyResize(image, width: 600);
+
+          // Codifica la imagen a JPG y reduce la calidad
           List<int> compressedImageBytes =
               img.encodeJpg(resizedImage, quality: 50);
+
+          // Convierte a base64
           String imageBase64 = base64Encode(compressedImageBytes);
           imageBase[i] = imageBase64;
 
-          // Imprime solo los primeros 100 caracteres
-          await Future.delayed(Duration(milliseconds: 1));
+          // Imprime solo los primeros 100 caracteres para debug
+          print(imageBase64.substring(0, 100));
+
+          // Agrega un retraso para evitar problemas de rendimiento
+          await Future.delayed(Duration(seconds: 2));
         }
       }
     }
+  }
+
+  /////////////carga
+  Future<void> _showLoadingDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // No permite que el diálogo se cierre tocando fuera de él
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Cargando..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _hideLoadingDialog(BuildContext context) async {
+    Navigator.of(context).pop();
   }
 
   void _showAlertDialog(String title, String message) {
@@ -265,21 +299,64 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
             SingleChildScrollView(
               child: Container(
                 child: Column(children: [
+                  SizedBox(
+                    height: 10,
+                  ),
                   Center(
                     child: Container(
                         child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        SizedBox(height: 100),
+                        SizedBox(height: 300),
+                        if (images[0] == null &&
+                            images[1] == null &&
+                            images[2] == null)
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons
+                                      .dog, // Aquí usa el ícono que desees
+                                  color: Colors.black,
+                                  size:
+                                      40, // Ajusta el tamaño del ícono según sea necesario
+                                ),
+                                SizedBox(
+                                    height:
+                                        8), // Espacio entre el ícono y el texto
+                                Text(
+                                  'Ingresar\nImagen',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize:
+                                        10, // Ajusta el tamaño del texto según sea necesario
+                                  ),
+                                  textAlign:
+                                      TextAlign.center, // Centra el texto
+                                ),
+                              ],
+                            ),
+                          ),
                         if (images[0] != null)
                           Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: EdgeInsets.only(top: 1),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
                                   color: Color.fromARGB(240, 22, 61, 96),
                                   width: 2),
-                              color: Color.fromARGB(255, 101, 170, 23),
+                              color: Color.fromARGB(26, 23, 104, 170),
                               image: DecorationImage(
                                 image: FileImage(images[0]!),
                                 fit: BoxFit.cover,
@@ -296,7 +373,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                               border: Border.all(
                                   color: Color.fromARGB(240, 22, 61, 96),
                                   width: 2),
-                              color: Color.fromARGB(255, 168, 66, 66),
+                              color: Color.fromARGB(26, 23, 104, 170),
                               image: DecorationImage(
                                 image: FileImage(images[1]!),
                                 fit: BoxFit.cover,
@@ -315,7 +392,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 border: Border.all(
                                     color: Color.fromARGB(240, 22, 61, 96),
                                     width: 2),
-                                color: Color.fromARGB(255, 114, 38, 145),
+                                color: Color.fromARGB(26, 23, 104, 170),
                                 image: DecorationImage(
                                   image: FileImage(images[2]!),
                                   fit: BoxFit.cover,
@@ -325,7 +402,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                     )),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   SizedBox(height: 20),
                   Center(
@@ -773,32 +850,24 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  _showLoadingDialog(context);
                                   // Call _convertImageToBase64 and wait for it to complete
 
                                   // Insertar imágenes
-                                  // if (images[0] != null ||
-                                  //     images[1] != null ||
-                                  //     images[2] != null) {
-                                  //   await _convertImageToBase64();
-                                  //   for (var image in imageBase) {
-                                  //     if (image != null) {
-                                  //       print(
-                                  //           "Enviando imagen a la API: ${image.substring(0, 100)}...");
-                                  //       await postImage(image, _nombre_mas.text,
-                                  //           privacidad);
-                                  //     }
-                                  //   }
-                                  // }
-
-                                  if (images.any((image) => image != null)) {
+                                  if (images[0] != null) {
                                     await _convertImageToBase64();
-                                    await Future.wait(imageBase.map((image) {
-                                      if (image != null) {
-                                        return postImage(image,
-                                            _nombre_mas.text, privacidad);
-                                      }
-                                      return Future.value();
-                                    }));
+                                    await postImage(imageBase[0].toString(),
+                                        _nombre_mas.text, privacidad);
+                                  }
+                                  if (images[1] != null) {
+                                    //  await _convertImageToBase64();
+                                    await postImage(imageBase[1].toString(),
+                                        _nombre_mas.text, privacidad);
+                                  }
+                                  if (images[2] != null) {
+                                    //  await _convertImageToBase64();
+                                    await postImage(imageBase[2].toString(),
+                                        _nombre_mas.text, privacidad);
                                   }
 
                                   String? username = await _getUsername();
@@ -820,6 +889,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                       imageBase = List.filled(3, null);
                                       contador = 0; // Reset the counter
                                     });
+                                    _hideLoadingDialog(context);
                                     Navigator.pop(context, true);
                                   } else {
                                     _showAlertDialog(
