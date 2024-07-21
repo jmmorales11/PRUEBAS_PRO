@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mascotas/mascotas/registrar_mascota.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -13,22 +16,34 @@ class MascotasPage extends StatefulWidget {
 }
 
 class _MascotasPageState extends State<MascotasPage> {
-  List<Map<String, String>> cards = [
-    {
-      'name': 'Nombre 1',
-      'description': 'Descripción 1',
-      'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwWRH-oXGeRDRQxDcmt1EgAt-FzSg_qAQFBA&s',
-      'icon': 'person'
-    },
-    {
-      'name': 'Nombre 2',
-      'description': 'Descripción 2',
-      'image':
-          'https://i.pinimg.com/236x/26/24/9a/26249a78777f6e3527d959ed4399dc1e.jpg',
-      'icon': 'person'
+  List<dynamic> mascotas = [];
+  String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      username = prefs.getString('username') ?? '';
+    });
+    _fetchMascotas();
+  }
+
+  Future<void> _fetchMascotas() async {
+    final response = await http.get(Uri.parse('https://back-mascotas.vercel.app/bmpr/mascotas/$username'));
+    if (response.statusCode == 200) {
+      setState(() {
+        mascotas = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Error al cargar las mascotas');
     }
-  ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +72,9 @@ class _MascotasPageState extends State<MascotasPage> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(8),
-                  itemCount: cards.length,
+                  itemCount: mascotas.length,
                   itemBuilder: (BuildContext context, int index) {
+                    final mascota = mascotas[index];
                     return Card(
                       color: Color(0xFF19173d),
                       shape: RoundedRectangleBorder(
@@ -68,22 +84,20 @@ class _MascotasPageState extends State<MascotasPage> {
                       child: ListTile(
                         leading: Icon(Icons.pets, color: Colors.white),
                         title: Text(
-                          cards[index]['name']!,
+                          mascota['nombre_mas'] ?? '',
                           style: TextStyle(color: Colors.white),
                         ),
                         subtitle: Text(
-                          cards[index]['description']!,
+                          mascota['descripcion'] ?? '',
                           style: TextStyle(color: Colors.white70),
                         ),
-                        trailing: Image.network(
-                          cards[index]['image']!,
-                          scale: 1,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Icon(Icons.error, color: Colors.red);
-                          },
-                        ),
+                        trailing: mascota['imagen'] != null
+                            ? Image.memory(
+                          base64Decode(mascota['imagen']),
+                          width: 50,
+                          height: 50,
+                        )
+                            : Icon(Icons.image_not_supported, color: Colors.grey),
                       ),
                     );
                   },
