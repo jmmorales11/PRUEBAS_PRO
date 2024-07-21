@@ -80,7 +80,7 @@ class Validations {
     value = value.trim();
 
     String pattern =
-        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+        r'^[a-zA-Z][\w-\.]*@([\w-]+\.)+[\w-]{2,4}$';
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
       return "Invalid email format";
@@ -126,7 +126,7 @@ class Validations {
     value = value.trim();
 
     // Expresión regular para permitir letras (con tildes), números y espacios, pero no caracteres especiales
-    String pattern = r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s]+$";
+    String pattern = r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$";
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
       return "Only letters (including tildes), numbers, and spaces are allowed.";
