@@ -10,7 +10,6 @@ import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import '../Validations.dart';
 
-
 class RegistrarMascota extends StatefulWidget {
   const RegistrarMascota({super.key});
 
@@ -49,7 +48,6 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
   String? _colorPelajeError;
   String? _tipoMascotaError;
   String? _descriptionError;
-
 
   final ImagePicker _picker = ImagePicker();
 
@@ -215,9 +213,8 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
           String imageBase64 = base64Encode(compressedImageBytes);
           imageBase[i] = imageBase64;
 
-          print(
-              "Imagen $i en Base64: ${imageBase[i]!.substring(0, 100)}..."); // Imprime solo los primeros 100 caracteres
-          await Future.delayed(Duration(seconds: 2));
+          // Imprime solo los primeros 100 caracteres
+          await Future.delayed(Duration(milliseconds: 1));
         }
       }
     }
@@ -229,7 +226,10 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color.fromARGB(240, 22, 61, 96),
-          title: Text(title, style: TextStyle(color: Colors.white),),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white),
+          ),
           content: Text(message, style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
@@ -249,6 +249,16 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Mascotas'),
+          backgroundColor: Color.fromARGB(255, 22, 61, 96),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         body: Stack(
           children: [
             Background(),
@@ -369,27 +379,27 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'ingresa el nombre de tu mascota',
-                                  hintStyle:
-                                  TextStyle(color: Colors.white54),
+                                  hintStyle: TextStyle(color: Colors.white54),
                                   labelText: 'Nombre Mascota',
                                   labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
-                                      Icons.pets,
-                                      color: Colors.white,
-                                    ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent),
+                                    Icons.pets,
+                                    color: Colors.white,
+                                  ),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   // Color del texto de error
                                   errorText: _nameMascotaError,
                                   suffixIcon: _nameMascotaError != null
                                       ? Icon(Icons.error,
-                                      color: Colors.redAccent)
+                                          color: Colors.redAccent)
                                       : null,
                                 ),
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   setState(() {
-                                    _nameMascotaError = _validations.validateOnlyLetters(value);
+                                    _nameMascotaError =
+                                        _validations.validateOnlyLetters(value);
                                   });
                                 },
                                 validator: (value) =>
@@ -412,8 +422,7 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 controller: _raza,
                                 decoration: InputDecoration(
                                   hintText: 'ingresa la raza de tu mascota',
-                                  hintStyle:
-                                  TextStyle(color: Colors.white54),
+                                  hintStyle: TextStyle(color: Colors.white54),
                                   border: InputBorder.none,
                                   labelText: 'Raza',
                                   labelStyle: TextStyle(color: Colors.white),
@@ -421,19 +430,20 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                     Icons.pets,
                                     color: Colors.white,
                                   ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   // Color del texto de error
                                   errorText: _razaError,
                                   suffixIcon: _razaError != null
                                       ? Icon(Icons.error,
-                                      color: Colors.redAccent)
+                                          color: Colors.redAccent)
                                       : null,
                                 ),
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   setState(() {
-                                    _razaError = _validations.validateOnlyLetters(value);
+                                    _razaError =
+                                        _validations.validateOnlyLetters(value);
                                   });
                                 },
                                 validator: (value) =>
@@ -483,8 +493,8 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                   ),
                                 ),
                                 style: TextStyle(color: Colors.white),
-                                dropdownColor:
-                                Colors.black, // Fondo negro para las opciones
+                                dropdownColor: Colors
+                                    .black, // Fondo negro para las opciones
                               ),
                             ),
                             // Container(
@@ -563,19 +573,20 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                     Icons.color_lens_rounded,
                                     color: Colors.white,
                                   ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   // Color del texto de error
                                   errorText: _colorPelajeError,
                                   suffixIcon: _colorPelajeError != null
                                       ? Icon(Icons.error,
-                                      color: Colors.redAccent)
+                                          color: Colors.redAccent)
                                       : null,
                                 ),
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   setState(() {
-                                    _colorPelajeError = _validations.validateOnlyLetters(value);
+                                    _colorPelajeError =
+                                        _validations.validateOnlyLetters(value);
                                   });
                                 },
                                 validator: (value) =>
@@ -604,19 +615,20 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                     Icons.pets,
                                     color: Colors.white,
                                   ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   // Color del texto de error
                                   errorText: _tipoMascotaError,
                                   suffixIcon: _tipoMascotaError != null
                                       ? Icon(Icons.error,
-                                      color: Colors.redAccent)
+                                          color: Colors.redAccent)
                                       : null,
                                 ),
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   setState(() {
-                                    _tipoMascotaError = _validations.validateOnlyLetters(value);
+                                    _tipoMascotaError =
+                                        _validations.validateOnlyLetters(value);
                                   });
                                 },
                                 validator: (value) =>
@@ -664,8 +676,8 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                   ),
                                 ),
                                 style: TextStyle(color: Colors.white),
-                                dropdownColor:
-                                Colors.black, // Fondo negro para las opciones
+                                dropdownColor: Colors
+                                    .black, // Fondo negro para las opciones
                               ),
                             ),
 
@@ -715,19 +727,20 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                     Icons.pets,
                                     color: Colors.white,
                                   ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   // Color del texto de error
                                   errorText: _descriptionError,
                                   suffixIcon: _descriptionError != null
                                       ? Icon(Icons.error,
-                                      color: Colors.redAccent)
+                                          color: Colors.redAccent)
                                       : null,
                                 ),
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   setState(() {
-                                    _descriptionError = _validations.validateDescription(value);
+                                    _descriptionError =
+                                        _validations.validateDescription(value);
                                   });
                                 },
                                 validator: (value) =>
@@ -763,18 +776,30 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                   // Call _convertImageToBase64 and wait for it to complete
 
                                   // Insertar imágenes
-                                  if (images[0] != null || images[1] != null || images[2] != null) {
-                                    await _convertImageToBase64();
-                                    for (var image in imageBase) {
-                                      if (image != null) {
-                                        print("Enviando imagen a la API: ${image.substring(0, 100)}...");
-                                        await postImage(image, _nombre_mas.text, privacidad);
-                                      }
-                                    }
-                                  }
+                                  // if (images[0] != null ||
+                                  //     images[1] != null ||
+                                  //     images[2] != null) {
+                                  //   await _convertImageToBase64();
+                                  //   for (var image in imageBase) {
+                                  //     if (image != null) {
+                                  //       print(
+                                  //           "Enviando imagen a la API: ${image.substring(0, 100)}...");
+                                  //       await postImage(image, _nombre_mas.text,
+                                  //           privacidad);
+                                  //     }
+                                  //   }
+                                  // }
 
-                                  print("Fecha de Nacimiento: ${_fecha_nac.text}");
-                                  print("Privacidad: ${privacidad}");
+                                  if (images.any((image) => image != null)) {
+                                    await _convertImageToBase64();
+                                    await Future.wait(imageBase.map((image) {
+                                      if (image != null) {
+                                        return postImage(image,
+                                            _nombre_mas.text, privacidad);
+                                      }
+                                      return Future.value();
+                                    }));
+                                  }
 
                                   String? username = await _getUsername();
                                   if (username != null) {
@@ -795,19 +820,21 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                       imageBase = List.filled(3, null);
                                       contador = 0; // Reset the counter
                                     });
+                                    Navigator.pop(context, true);
                                   } else {
-                                    _showAlertDialog("Error", "Username not found.");
+                                    _showAlertDialog(
+                                        "Error", "Username not found.");
                                   }
                                 } else {
-                                  _showAlertDialog("Register invalid", "Form incompleted");
+                                  _showAlertDialog(
+                                      "Register invalid", "Form incompleted");
                                 }
                               },
-
                               child: Text(
                                 'Insertar',
                                 style: TextStyle(
-                                    color:
-                                    const Color.fromARGB(255, 255, 255, 255),
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
                                     fontSize: 20),
                               ),
                             ),

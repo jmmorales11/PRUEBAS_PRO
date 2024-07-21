@@ -36,7 +36,8 @@ class _MascotasPageState extends State<MascotasPage> {
   }
 
   Future<void> _fetchMascotas() async {
-    final response = await http.get(Uri.parse('https://back-mascotas.vercel.app/bmpr/mascotas/$username'));
+    final response = await http.get(
+        Uri.parse('https://back-mascotas.vercel.app/bmpr/mascotas/$username'));
     if (response.statusCode == 200) {
       setState(() {
         mascotas = json.decode(response.body);
@@ -58,10 +59,6 @@ class _MascotasPageState extends State<MascotasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mascotas'),
-        backgroundColor: Color.fromARGB(255, 22, 61, 96),
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
@@ -84,32 +81,46 @@ class _MascotasPageState extends State<MascotasPage> {
                 itemCount: mascotas.length,
                 itemBuilder: (BuildContext context, int index) {
                   final mascota = mascotas[index];
-                  return Card(
-                    color: Color(0xFF19173d),
-                    shape: RoundedRectangleBorder(
+                  return Container(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Color.fromARGB(240, 22, 61, 96),
+                        width: 2,
+                      ),
+                      color: const Color.fromARGB(61, 0, 0, 0),
                     ),
                     margin: EdgeInsets.symmetric(vertical: 10),
-                    child: ListTile(
-                      leading: Icon(Icons.pets, color: Colors.white),
-                      title: Text(
-                        mascota['nombre_mas'] ?? '',
-                        style: TextStyle(color: Colors.white),
+                    child: Card(
+                      color: Colors
+                          .transparent, // Make the card background transparent to show the container color
+                      elevation:
+                          0, // Remove the card shadow to match the container's look
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      subtitle: Text(
-                        mascota['descripcion'] ?? '',
-                        style: TextStyle(color: Colors.white70),
+                      child: ListTile(
+                        leading: Icon(Icons.pets, color: Colors.white),
+                        title: Text(
+                          mascota['nombre_mas'] ?? '',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          mascota['descripcion'] ?? '',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                        trailing: mascota['imagen'] != null
+                            ? Image.memory(
+                                base64Decode(mascota['imagen']),
+                                width: 50,
+                                height: 50,
+                              )
+                            : Icon(Icons.image_not_supported,
+                                color: Colors.grey),
+                        onTap: () {
+                          _navigateToDetail(Mascota.fromJson(mascota));
+                        },
                       ),
-                      trailing: mascota['imagen'] != null
-                          ? Image.memory(
-                        base64Decode(mascota['imagen']),
-                        width: 50,
-                        height: 50,
-                      )
-                          : Icon(Icons.image_not_supported, color: Colors.grey),
-                      onTap: () {
-                        _navigateToDetail(Mascota.fromJson(mascota)); // Asegúrate de que el método fromJson esté definido en Mascota
-                      },
                     ),
                   );
                 },
@@ -124,7 +135,12 @@ class _MascotasPageState extends State<MascotasPage> {
                     MaterialPageRoute(
                       builder: (context) => RegistrarMascota(),
                     ),
-                  );
+                  ).then((result) {
+                    // Refresh data if a pet was added
+                    if (result == true) {
+                      _fetchMascotas();
+                    }
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 22, 61, 96),

@@ -6,7 +6,6 @@ import 'package:mascotas/widgets/tab_bar.dart';
 import '../RegisterUsers/ApiServices_Users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -48,14 +47,16 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 
-
   void _showAlertDialog(String title, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color.fromARGB(240, 22, 61, 96),
-          title: Text(title, style: TextStyle(color: Colors.white),),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white),
+          ),
           content: Text(message, style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
@@ -69,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,20 +104,27 @@ class _LoginPageState extends State<LoginPage> {
                           child: CustomPaint(
                             painter: ContainerPainter(),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 70, 20, 20),
                               child: Column(
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF19173d),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                          color:
+                                              Color.fromARGB(240, 22, 61, 96),
+                                          width: 2),
+                                      color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
                                     child: TextFormField(
                                       controller: _usernameController,
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.person, color: Colors.white),
+                                        prefixIcon: Icon(Icons.person,
+                                            color: Colors.white),
                                         labelText: 'Username',
-                                        labelStyle: TextStyle(color: Colors.white),
+                                        labelStyle:
+                                            TextStyle(color: Colors.white),
                                         // Color del texto de error
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(15),
@@ -128,17 +135,24 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(height: 20),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF19173d),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                          color:
+                                              Color.fromARGB(240, 22, 61, 96),
+                                          width: 2),
+                                      color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
                                     child: TextFormField(
                                       controller: _passwordController,
                                       obscureText: _isObscured,
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.lock, color: Colors.white),
+                                        prefixIcon: Icon(Icons.lock,
+                                            color: Colors.white),
                                         suffixIcon: IconButton(
                                           icon: Icon(
-                                            _isObscured ? Icons.visibility : Icons.visibility_off,
+                                            _isObscured
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
                                             color: Colors.white,
                                           ),
                                           onPressed: () {
@@ -147,8 +161,9 @@ class _LoginPageState extends State<LoginPage> {
                                             });
                                           },
                                         ),
-                                        labelText: 'Password',
-                                        labelStyle: TextStyle(color: Colors.white),
+                                        labelText: 'Contraseña',
+                                        labelStyle:
+                                            TextStyle(color: Colors.white),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(15),
                                       ),
@@ -156,22 +171,29 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-
                                   SizedBox(height: 40),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if(_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
-                                        if(_validateLogin(_usernameController.text, _passwordController.text)){
-                                          await _storeUserData(_usernameController.text);
+                                      if (_usernameController.text.isNotEmpty &&
+                                          _passwordController.text.isNotEmpty) {
+                                        if (_validateLogin(
+                                            _usernameController.text,
+                                            _passwordController.text)) {
+                                          await _storeUserData(
+                                              _usernameController.text);
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => TabBarCustom()),
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabBarCustom()),
                                           );
-                                        }else{
-                                          _showAlertDialog("Login invalid","Username or password incorrect");
+                                        } else {
+                                          _showAlertDialog("Login invalid",
+                                              "Username or password incorrect");
                                         }
-                                      }else{
-                                        _showAlertDialog("Login invalid", "Texfield empty");
+                                      } else {
+                                        _showAlertDialog(
+                                            "Login invalid", "Texfield empty");
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -179,9 +201,11 @@ class _LoginPageState extends State<LoginPage> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 50, vertical: 15),
                                     ),
-                                    child: Text('LOGIN', style: TextStyle(color: Colors.white)),
+                                    child: Text('Ingresar',
+                                        style: TextStyle(color: Colors.white)),
                                   ),
                                   SizedBox(height: 20),
                                   Row(
@@ -193,18 +217,18 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                       SizedBox(width: 10),
-                                      Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                                      Icon(Icons.keyboard_arrow_down,
+                                          color: Colors.white),
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Container(
-                                            height: 2,
-                                            color: Colors.white),
+                                            height: 2, color: Colors.white),
                                       ),
                                     ],
                                   ),
                                   SizedBox(height: 40),
                                   Text(
-                                    "You don't have an account yet?",
+                                    "¿Aún no tienes cuenta?",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   SizedBox(height: 40),
@@ -213,17 +237,23 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => RegisterPage()),
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterPage()),
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color(0xFF1f4a71),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50, vertical: 15),
                                       ),
-                                      child: Text('RegisterUsers', style: TextStyle(color: Colors.white)),
+                                      child: Text('Registrar usuario',
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                     ),
                                   ),
                                   SizedBox(height: 60),
@@ -237,15 +267,17 @@ class _LoginPageState extends State<LoginPage> {
                           top: 0,
                           child: CircleAvatar(
                             radius: 50.0,
-                            backgroundColor: Colors.transparent, // Color de fondo opcional
+                            backgroundColor:
+                                Colors.transparent, // Color de fondo opcional
                             child: Icon(
                               Icons.account_circle,
-                              size: 100, // Ajusta el tamaño del icono según el radio del CircleAvatar
-                              color: Colors.white, // Ajusta el color del icono si es necesario
+                              size:
+                                  100, // Ajusta el tamaño del icono según el radio del CircleAvatar
+                              color: Colors
+                                  .white, // Ajusta el color del icono si es necesario
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ],
@@ -270,11 +302,14 @@ class ContainerPainter extends CustomPainter {
       ..moveTo(0, 20)
       ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width - 20, 0)
-      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: false)
+      ..arcToPoint(Offset(size.width, 20),
+          radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width, size.height - 20)
-      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(size.width - 20, size.height),
+          radius: Radius.circular(20), clockwise: true)
       ..lineTo(20, size.height)
-      ..arcToPoint(Offset(0, size.height - 20), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(0, size.height - 20),
+          radius: Radius.circular(20), clockwise: true)
       ..close();
     canvas.drawPath(path, paint);
   }

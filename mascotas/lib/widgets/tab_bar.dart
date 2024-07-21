@@ -25,7 +25,7 @@ class _TabBarCustomState extends State<TabBarCustom> {
   // Screen para navegación
   final List<Widget> _screens = [
     const HomeScreen(),
-    const EjemploScreen(),
+    //const EjemploScreen(),
     MascotasPage(),
     const EjemploScreen(),
   ];
@@ -38,9 +38,9 @@ class _TabBarCustomState extends State<TabBarCustom> {
         index: 0,
         items: <Widget>[
           _buildIcon(Icons.home, isSelected[0]),
-          _buildIcon(Icons.person, isSelected[1]),
-          _buildIcon(Icons.favorite_border, isSelected[2]),
-          _buildIcon(Icons.logout_outlined, isSelected[3]),
+          //_buildIcon(Icons.person, isSelected[1]),
+          _buildIcon(Icons.favorite_border, isSelected[1]),
+          _buildIcon(Icons.logout_outlined, isSelected[2]),
         ],
         color: const Color.fromARGB(30, 255, 255, 255),
         buttonBackgroundColor: const Color.fromARGB(255, 25, 23, 61),
@@ -74,7 +74,8 @@ class _TabBarCustomState extends State<TabBarCustom> {
       body: Container(
         color: Color.fromARGB(255, 25, 23, 61),
         child: Center(
-          child: _screens[_page], // Muestra la pantalla correspondiente al índice seleccionado
+          child: _screens[
+              _page], // Muestra la pantalla correspondiente al índice seleccionado
         ),
       ),
     );
