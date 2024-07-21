@@ -3,6 +3,8 @@ import 'package:mascotas/mascotas/registrar_mascota.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Mascota.dart';
+import 'MascotasDetalle.dart'; // Asegúrate de importar el archivo MascotasDetalle.dart
 
 void main() {
   runApp(MaterialApp(
@@ -27,7 +29,6 @@ class _MascotasPageState extends State<MascotasPage> {
 
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
-
     setState(() {
       username = prefs.getString('username') ?? '';
     });
@@ -45,86 +46,97 @@ class _MascotasPageState extends State<MascotasPage> {
     }
   }
 
+  void _navigateToDetail(Mascota mascota) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MascotasDetalle(mascota: mascota),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Mascotas'),
-          backgroundColor: Color.fromARGB(255, 22, 61, 96),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment.bottomRight,
-              radius: 3.5,
-              colors: [
-                const Color.fromARGB(240, 22, 61, 96),
-                const Color.fromARGB(255, 25, 23, 61),
-                const Color.fromARGB(255, 25, 23, 61),
-                const Color.fromARGB(255, 25, 23, 61),
-                const Color.fromARGB(240, 25, 23, 61),
-              ],
-            ),
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: mascotas.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final mascota = mascotas[index];
-                    return Card(
-                      color: Color(0xFF19173d),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: ListTile(
-                        leading: Icon(Icons.pets, color: Colors.white),
-                        title: Text(
-                          mascota['nombre_mas'] ?? '',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          mascota['descripcion'] ?? '',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                        trailing: mascota['imagen'] != null
-                            ? Image.memory(
-                          base64Decode(mascota['imagen']),
-                          width: 50,
-                          height: 50,
-                        )
-                            : Icon(Icons.image_not_supported, color: Colors.grey),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegistrarMascota()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 22, 61, 96),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  ),
-                  child: Icon(Icons.add, color: Colors.white),
-                ),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Mascotas'),
+        backgroundColor: Color.fromARGB(255, 22, 61, 96),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.bottomRight,
+            radius: 3.5,
+            colors: [
+              const Color.fromARGB(240, 22, 61, 96),
+              const Color.fromARGB(255, 25, 23, 61),
+              const Color.fromARGB(255, 25, 23, 61),
+              const Color.fromARGB(255, 25, 23, 61),
+              const Color.fromARGB(240, 25, 23, 61),
             ],
           ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: mascotas.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final mascota = mascotas[index];
+                  return Card(
+                    color: Color(0xFF19173d),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: ListTile(
+                      leading: Icon(Icons.pets, color: Colors.white),
+                      title: Text(
+                        mascota['nombre_mas'] ?? '',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        mascota['descripcion'] ?? '',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      trailing: mascota['imagen'] != null
+                          ? Image.memory(
+                        base64Decode(mascota['imagen']),
+                        width: 50,
+                        height: 50,
+                      )
+                          : Icon(Icons.image_not_supported, color: Colors.grey),
+                      onTap: () {
+                        _navigateToDetail(Mascota.fromJson(mascota)); // Asegúrate de que el método fromJson esté definido en Mascota
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(16),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RegistrarMascota(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 22, 61, 96),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                ),
+                child: Icon(Icons.add, color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
     );
