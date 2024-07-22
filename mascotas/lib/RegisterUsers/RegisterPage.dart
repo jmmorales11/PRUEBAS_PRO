@@ -792,6 +792,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     _usernameError = null;
                                                   });
                                                   await _convertImageToBase64();
+                                                  //Encriptacion de contraseña:
+                                                  final encryptedPassword = await encryptData.encryptPassword(_passwordController.text);
                                                   final userData = {
                                                     'firstName': _nameController.text,
                                                     'lastName': _lastNameController.text,
@@ -799,7 +801,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     'email': _emailController.text,
                                                     'dateBirthday': _dateController.text,
                                                     'username': _usernameController.text,
-                                                    'password': _passwordController.text,
+                                                    'password': encryptedPassword,
                                                     'userPicture': imageBase64,
                                                     'role': "no administrador"
                                                   };
