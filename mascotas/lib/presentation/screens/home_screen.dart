@@ -32,10 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         items = List.generate(imagesData.length, (index) {
           var image = imagesData[index];
-          var pet = petsData.firstWhere((pet) => pet['nombre_mas'] == image['mascota'], orElse: () => null);
+          if (image['privacidad'] != 'Público') {
+            return null; // Ignora imágenes que no son públicas
+          }
+
+          var pet = petsData.firstWhere((pet) => pet['nombre_mas'] == image['mascota'] && pet['privacidad'] == 'Público', orElse: () => null);
 
           if (pet == null) {
-            return null; // Ignora imágenes que no tienen información de mascota correspondiente
+            return null; // Ignora imágenes que no tienen información de mascota pública correspondiente
           }
 
           String nombre = pet['nombre_mas'];
