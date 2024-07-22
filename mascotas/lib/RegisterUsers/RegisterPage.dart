@@ -13,6 +13,8 @@ import '../Validations.dart';
 import 'ApiServices_Users.dart';
 import 'package:image/image.dart' as img;
 
+import 'encrypt_data.dart';
+
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -30,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final _formKey = GlobalKey<FormState>();
   final Validations _validations = Validations();
+  final EncryptData encryptData = EncryptData();
 
   late Map data;
   late List userData = [];
