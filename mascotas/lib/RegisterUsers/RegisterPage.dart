@@ -109,11 +109,13 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          key: Key('actionSheetDialog'),
           title: Text('Seleccione una opción'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
+                key: Key('cameraOption'),
                 leading: Icon(Icons.camera),
                 title: Text('Abrir cámara'),
                 onTap: () {
@@ -122,6 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
               ),
               ListTile(
+                key: Key('galleryOption'),
                 leading: Icon(Icons.photo_album),
                 title: Text('Abrir galería'),
                 onTap: () {
@@ -776,6 +779,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       SizedBox(height: 20),
                                       Container(
                                         child: ElevatedButton(
+                                          key: Key('showDialogButton'),
                                           onPressed: () async {
                                             if (_formKey.currentState!.validate()) {
                                               // Mostrar el diálogo de carga y realizar la operación de registro
@@ -834,6 +838,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               left: MediaQuery.of(context).size.width / 2 - 60,
                               top: 0,
                               child: GestureDetector(
+                                key: Key('showActionSheetButton'),
                                 onTap: () async {
                                   _showImageSourceActionSheet(context);
                                   // Convertir la imagen a base64 después de que el usuario haya seleccionado una imagen

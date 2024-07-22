@@ -80,6 +80,7 @@ class _MascotasPageState extends State<MascotasPage> {
             ),
             Expanded(
               child: ListView.builder(
+                key: Key('petList'),
                 padding: const EdgeInsets.all(8),
                 itemCount: mascotas.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -103,8 +104,10 @@ class _MascotasPageState extends State<MascotasPage> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ListTile(
+                        key: ValueKey('petList_item_$index'),
                         leading: Icon(Icons.pets, color: Colors.white),
                         title: Text(
+                          key: ValueKey('pet_name_$index'),
                           mascota['nombre_mas'] ?? '',
                           style: TextStyle(color: Colors.white),
                         ),
@@ -132,6 +135,7 @@ class _MascotasPageState extends State<MascotasPage> {
             Container(
               margin: EdgeInsets.all(16),
               child: ElevatedButton(
+                key: Key('addButton'),
                 onPressed: () {
                   Navigator.push(
                     context,

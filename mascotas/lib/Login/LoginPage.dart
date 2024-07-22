@@ -119,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
                                     child: TextFormField(
+                                      key: const Key('username_field'),
                                       controller: _usernameController,
                                       decoration: InputDecoration(
                                         prefixIcon: Icon(Icons.person, color: Colors.white),
@@ -140,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
                                     child: TextFormField(
+                                      key: const Key('password_field'),
                                       controller: _passwordController,
                                       obscureText: _isObscured,
                                       decoration: InputDecoration(
@@ -166,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(height: 10),
                                   SizedBox(height: 40),
                                   ElevatedButton(
+                                    key: Key('login_button'),
                                     onPressed: () async {
                                       if (_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
                                         bool isLoginValid = await _validateLogin(
@@ -217,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(height: 40),
                                   Container(
                                     child: ElevatedButton(
+                                      key: Key('register_button'),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
