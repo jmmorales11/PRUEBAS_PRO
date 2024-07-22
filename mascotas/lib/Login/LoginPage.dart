@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mascotas/RegisterUsers/RegisterPage.dart';
+import 'package:mascotas/RegisterUsers/encrypt_data.dart';
 import 'package:mascotas/widgets/tab_bar.dart';
 import '../RegisterUsers/ApiServices_Users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final EncryptData encryptData = EncryptData();
   bool _isObscured = true;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
@@ -38,10 +40,11 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setString('username', username);
   }
 
-  bool _validateLogin(String username1, String password1) {
+  Future<bool> _validateLogin(String username1, String password1) async {
     for (var user in userData) {
-      if (user['username'] == username1 && user['password'] == password1) {
-        return true;
+      if (user['username'] == username1) {
+        bool isVerified = await encryptData.verifyPassword(password1, user['password']);
+        return isVerified;
       }
     }
     return false;
@@ -104,28 +107,23 @@ class _LoginPageState extends State<LoginPage> {
                           child: CustomPaint(
                             painter: ContainerPainter(),
                             child: Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 70, 20, 20),
+                              padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
                               child: Column(
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
                                       border: Border.all(
-                                          color:
-                                              Color.fromARGB(240, 22, 61, 96),
+                                          color: Color.fromARGB(240, 22, 61, 96),
                                           width: 2),
                                       color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
                                     child: TextFormField(
                                       controller: _usernameController,
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.person,
-                                            color: Colors.white),
+                                        prefixIcon: Icon(Icons.person, color: Colors.white),
                                         labelText: 'Username',
-                                        labelStyle:
-                                            TextStyle(color: Colors.white),
-                                        // Color del texto de error
+                                        labelStyle: TextStyle(color: Colors.white),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(15),
                                       ),
@@ -137,8 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
                                       border: Border.all(
-                                          color:
-                                              Color.fromARGB(240, 22, 61, 96),
+                                          color: Color.fromARGB(240, 22, 61, 96),
                                           width: 2),
                                       color: const Color.fromARGB(61, 0, 0, 0),
                                     ),
@@ -146,13 +143,10 @@ class _LoginPageState extends State<LoginPage> {
                                       controller: _passwordController,
                                       obscureText: _isObscured,
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.lock,
-                                            color: Colors.white),
+                                        prefixIcon: Icon(Icons.lock, color: Colors.white),
                                         suffixIcon: IconButton(
                                           icon: Icon(
-                                            _isObscured
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
+                                            _isObscured ? Icons.visibility : Icons.visibility_off,
                                             color: Colors.white,
                                           ),
                                           onPressed: () {
@@ -162,8 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                                           },
                                         ),
                                         labelText: 'Contraseña',
-                                        labelStyle:
-                                            TextStyle(color: Colors.white),
+                                        labelStyle: TextStyle(color: Colors.white),
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(15),
                                       ),
@@ -174,26 +167,20 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(height: 40),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if (_usernameController.text.isNotEmpty &&
-                                          _passwordController.text.isNotEmpty) {
-                                        if (_validateLogin(
-                                            _usernameController.text,
-                                            _passwordController.text)) {
-                                          await _storeUserData(
-                                              _usernameController.text);
+                                      if (_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
+                                        bool isLoginValid = await _validateLogin(
+                                            _usernameController.text, _passwordController.text);
+                                        if (isLoginValid) {
+                                          await _storeUserData(_usernameController.text);
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabBarCustom()),
+                                            MaterialPageRoute(builder: (context) => TabBarCustom()),
                                           );
                                         } else {
-                                          _showAlertDialog("Login invalid",
-                                              "Username or password incorrect");
+                                          _showAlertDialog("Login invalid", "Username or password incorrect");
                                         }
                                       } else {
-                                        _showAlertDialog(
-                                            "Login invalid", "Texfield empty");
+                                        _showAlertDialog("Login invalid", "Texfield empty");
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -201,11 +188,9 @@ class _LoginPageState extends State<LoginPage> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 50, vertical: 15),
+                                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                                     ),
-                                    child: Text('Ingresar',
-                                        style: TextStyle(color: Colors.white)),
+                                    child: Text('Ingresar', style: TextStyle(color: Colors.white)),
                                   ),
                                   SizedBox(height: 20),
                                   Row(
@@ -217,12 +202,10 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                       SizedBox(width: 10),
-                                      Icon(Icons.keyboard_arrow_down,
-                                          color: Colors.white),
+                                      Icon(Icons.keyboard_arrow_down, color: Colors.white),
                                       SizedBox(width: 10),
                                       Expanded(
-                                        child: Container(
-                                            height: 2, color: Colors.white),
+                                        child: Container(height: 2, color: Colors.white),
                                       ),
                                     ],
                                   ),
@@ -237,23 +220,17 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterPage()),
+                                          MaterialPageRoute(builder: (context) => RegisterPage()),
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color(0xFF1f4a71),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                                          borderRadius: BorderRadius.circular(20),
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 50, vertical: 15),
+                                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                                       ),
-                                      child: Text('Registrar usuario',
-                                          style:
-                                              TextStyle(color: Colors.white)),
+                                      child: Text('Registrar usuario', style: TextStyle(color: Colors.white)),
                                     ),
                                   ),
                                   SizedBox(height: 60),
@@ -267,14 +244,11 @@ class _LoginPageState extends State<LoginPage> {
                           top: 0,
                           child: CircleAvatar(
                             radius: 50.0,
-                            backgroundColor:
-                                Colors.transparent, // Color de fondo opcional
+                            backgroundColor: Colors.transparent,
                             child: Icon(
                               Icons.account_circle,
-                              size:
-                                  100, // Ajusta el tamaño del icono según el radio del CircleAvatar
-                              color: Colors
-                                  .white, // Ajusta el color del icono si es necesario
+                              size: 100,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -302,14 +276,11 @@ class ContainerPainter extends CustomPainter {
       ..moveTo(0, 20)
       ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width - 20, 0)
-      ..arcToPoint(Offset(size.width, 20),
-          radius: Radius.circular(20), clockwise: false)
+      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width, size.height - 20)
-      ..arcToPoint(Offset(size.width - 20, size.height),
-          radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise: true)
       ..lineTo(20, size.height)
-      ..arcToPoint(Offset(0, size.height - 20),
-          radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(0, size.height - 20), radius: Radius.circular(20), clockwise: true)
       ..close();
     canvas.drawPath(path, paint);
   }
