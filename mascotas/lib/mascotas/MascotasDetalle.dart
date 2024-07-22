@@ -237,13 +237,32 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
                               ElevatedButton(
                                 onPressed: _showModal,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF1f4a71),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 55, vertical: 10),
+
+                                  backgroundColor: Color.fromARGB(
+                                      60, 23, 68, 165), // Color de fondo
+
+                                  shadowColor: const Color.fromARGB(
+                                      61, 0, 0, 0), // Color de la sombra
+                                  elevation: 5, // Tamaño de la sombra
+                                  side: BorderSide(
+                                    color: Color.fromARGB(
+                                        239, 40, 125, 199), // Color del borde
+                                    width: 2, // Ancho del borde
                                   ),
-                                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        17), // Bordes redondeados
+                                  ),
                                 ),
-                                child: Text('Agregar más información', style: TextStyle(color: Colors.white)),
+                                child: Text(
+                                  'Agregar más información',
+                                  style: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
@@ -256,11 +275,9 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
                       child: CircleAvatar(
                         radius: 50.0,
                         backgroundColor: Colors.transparent,
-                        child: Icon(
-                          Icons.pets,
-                          size: 100,
-                          color: Colors.white,
-                        ),
+                        backgroundImage: widget.mascota.imagen != null
+                            ? MemoryImage(base64Decode(widget.mascota.imagen!))
+                            : AssetImage('assets/default_dog.png') as ImageProvider,
                       ),
                     ),
                   ],
