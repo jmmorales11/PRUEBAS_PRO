@@ -40,21 +40,30 @@ class Validations {
   }
 
   //VALIDA NOMBRE DE PERSONAS
-// Verificar que solo contenga letras y tenga entre 2 y 10 caracteres
+// Verificar que solo contenga letras y tenga entre 2 y 25 caracteres
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return "El nombre no puede estar vacío";
     }
+
+    // Eliminar espacios al inicio y al final
     value = value.trim();
 
-    // Verificar que solo contenga letras y tenga entre 2 y 10 caracteres
-    String pattern = r"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñA-ZÁÉÍÓÚÜÑ]{1,9}$";
+    // Verificar que la longitud sea de 25 caracteres o menos
+    if (value.length > 25) {
+      return "El nombre no puede tener más de 25 caracteres";
+    }
+
+    // Verificar que solo contenga letras y espacios entre palabras, y que cada palabra empiece con mayúscula
+    String pattern = r"^(?:[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+)(?: [A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+)*$";
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return "Sólo letras, entre 2 y 10 caracteres,\n y la primera letra debe ir en mayúscula.";
+      return "Cada palabra debe iniciar con mayúscula y solo debe contener letras y espacios entre palabras.";
     }
+
     return null;
   }
+
 
   //VALIDA CONTRASEÑA
   //Ingresa lo que quiera, minimo 6 caracteres
@@ -72,7 +81,7 @@ class Validations {
   //VALIDA EMAL
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return "El correo electrónico no \npuede estar vacío";
+      return "El correo electrónico no puede estar vacío";
     }
     value = value.trim();
 
@@ -94,7 +103,7 @@ class Validations {
     String pattern = r'^09\d{8}$';
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return "Formato de número de teléfono \necuatoriano no válido";
+      return "Formato de número de teléfono ecuatoriano no válido";
     }
     return null;
   }
@@ -102,7 +111,7 @@ class Validations {
   //VALIDAR CONTRASEÑA SIMILAR
   String? validatePasswordEquals(String? value, String? originalPassword) {
     if (value == null || value.isEmpty) {
-      return "La confirmación de contraseña\n no puede estar vacía";
+      return "La confirmación de contraseña no puede estar vacía";
     }
     if (value != originalPassword) {
       return "Las contraseñas no coinciden";
@@ -123,10 +132,34 @@ class Validations {
     String pattern = r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$";
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return "Sólo se permiten letras (incluidas las tildes)\n, números y espacios.";
+      return "Sólo se permiten letras (incluidas las tildes), números y espacios.";
     }
     return null;
   }
+
+  String? validateNamePet(String? value) {
+    if (value == null || value.isEmpty) {
+      return "El nombre no puede estar vacío";
+    }
+
+    // Eliminar espacios al inicio y al final
+    value = value.trim();
+
+    // Verificar que la longitud sea de hasta 25 caracteres
+    if (value.length > 25) {
+      return "El nombre no puede tener más de 25 caracteres";
+    }
+
+    // Verificar que solo contenga letras y espacios entre palabras
+    String pattern = r"^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$";
+    RegExp regExp = RegExp(pattern);
+    if (!regExp.hasMatch(value)) {
+      return "Solo se permiten letras y espacios entre palabras.";
+    }
+
+    return null;
+  }
+
 
   String? validateDescription(String? value) {
     if (value == null || value.isEmpty) {

@@ -172,8 +172,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _showAlertDialog(String title, String message) {
-    showDialog(
+  Future<void> _showAlertDialog(String title, String message) async {
+    return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -196,29 +196,41 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> _hideLoadingDialog(BuildContext context) async {
-    Navigator.of(context).pop();
-  }
-
-  Future<void> _showLoadingDialog(BuildContext context) async {
+  Future<void> _showLoadingDialog(BuildContext context, Future<void> Function() operation) async {
+    // Mostrar el diálogo de carga
     showDialog(
       context: context,
-      barrierDismissible:
-          false, // No permite que el diálogo se cierre tocando fuera de él
+      barrierDismissible: false, // No permite que el diálogo se cierre tocando fuera de él
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
           content: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(),
               SizedBox(width: 20),
-              Text("Cargando..."),
+              Text("Registro en proceso...", style: TextStyle(color: Colors.white)),
             ],
           ),
         );
       },
     );
+    try {
+      await operation();
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } catch (error) {
+      Navigator.of(context).pop();
+
+      _showAlertDialog("Error", "intentelo de nuevo");
+    }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -765,97 +777,50 @@ class _RegisterPageState extends State<RegisterPage> {
                                       Container(
                                         child: ElevatedButton(
                                           onPressed: () async {
-                                            ///////////////////
-                                            //_showLoadingDialog(context); DEXOMENTAS ES PARA CARGAR PERO ESTAN MAS VALIDADIONES ASI QUE LE CMABIE PERO PRUEB PA QUE VEAS QUE ES
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              // Validación asíncrona del nombre de usuario
-                                              String? usernameExistsError =
-                                                  await _validations
-                                                      .validateUserExists(
-                                                          _usernameController
-                                                              .text);
-                                              if (usernameExistsError != null) {
-                                                setState(() {
-                                                  _usernameError =
-                                                      usernameExistsError;
-                                                });
-                                                _showAlertDialog(
-                                                    "Registro inválido",
-                                                    "El nombre de usuario ya existe");
-                                              } else {
-                                                setState(() {
-                                                  _usernameError = null;
-                                                });
+                                            if (_formKey.currentState!.validate()) {
+                                              // Mostrar el diálogo de carga y realizar la operación de registro
+                                              await _showLoadingDialog(context, () async {
+                                                // Validación asíncrona del nombre de usuario
+                                                String? usernameExistsError = await _validations.validateUserExists(_usernameController.text);
+                                                if (usernameExistsError != null) {
+                                                  setState(() {
+                                                    _usernameError = usernameExistsError;
+                                                  });
+                                                  throw Exception("El nombre de usuario ya existe");
+                                                } else {
+                                                  setState(() {
+                                                    _usernameError = null;
+                                                  });
+                                                  await _convertImageToBase64();
+                                                  final userData = {
+                                                    'firstName': _nameController.text,
+                                                    'lastName': _lastNameController.text,
+                                                    'phoneNumber': _phoneNumberController.text,
+                                                    'email': _emailController.text,
+                                                    'dateBirthday': _dateController.text,
+                                                    'username': _usernameController.text,
+                                                    'password': _passwordController.text,
+                                                    'userPicture': imageBase64,
+                                                    'role': "no administrador"
+                                                  };
 
-                                                // Verificar si se ha seleccionado una imagen
-                                                if (_image == null) {
-                                                  _showAlertDialog(
-                                                      "Registro inválido",
-                                                      "Seleccione una foto de perfil");
-                                                  return;
+                                                  // Enviar los datos a la API
+                                                  await ApiService.addUser(userData);
+                                                  await getUsers();
                                                 }
-
-                                                // Convertir la imagen a base64 antes de enviar la solicitud
-                                                await _convertImageToBase64();
-
-                                                // Crear un mapa con los datos del formulario
-                                                final userData = {
-                                                  'firstName':
-                                                      _nameController.text,
-                                                  'lastName':
-                                                      _lastNameController.text,
-                                                  'phoneNumber':
-                                                      _phoneNumberController
-                                                          .text,
-                                                  'email':
-                                                      _emailController.text,
-                                                  'dateBirthday':
-                                                      _dateController.text,
-                                                  'username':
-                                                      _usernameController.text,
-                                                  'password':
-                                                      _passwordController.text,
-                                                  'userPicture': imageBase64,
-                                                  'role': "no administrador"
-                                                };
-
-                                                // Enviar los datos a la API
-                                                ApiService.addUser(userData)
-                                                    .then((_) {
-                                                  getUsers();
-
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LoginPage()),
-                                                  );
-                                                }).catchError((error) {
-                                                  // Manejo de errores
-                                                  print(error);
-                                                  _showAlertDialog("Error",
-                                                      "No se ha podido registrar el usuario. Por favor, inténtelo de nuevo.");
-                                                });
-                                              }
+                                              });
                                             } else {
-                                              _showAlertDialog(
-                                                  "Registro inválido",
-                                                  "Formulario incompleto");
+                                              _showAlertDialog("Registro inválido", "Formulario incompleto");
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xFF1f4a71),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                              borderRadius: BorderRadius.circular(20),
                                             ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 50, vertical: 15),
+                                            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                                           ),
-                                          child: Text('Crear',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
+                                          child: Text('Crear', style: TextStyle(color: Colors.white)),
                                         ),
                                       ),
                                     ],
