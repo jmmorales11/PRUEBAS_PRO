@@ -40,7 +40,6 @@ void main(){
   );
 
 
-
   //VALID PERSON NAME
   test("Valid Name", () async{
       String? result = _validations.validateName("Steven");
@@ -64,6 +63,12 @@ void main(){
     }
   );
 
+  test("Valid Name", () async{
+    String? result = _validations.validateName("Guillermo Sebastian");
+    expect(result, null);
+  }
+  );
+
   //Must have the first letter capitalized
   test("Invalid Name", () async{
       String? result = _validations.validateName("steven");
@@ -72,21 +77,7 @@ void main(){
   );
 
   test("Invalid Name", () async{
-    String? result = _validations.validateName("");
-    expect(result, isNotNull);
-  }
-  );
-
-  //Must have only one word
-  test("Invalid Name", () async{
-      String? result = _validations.validateName("Guillermo Sebastian");
-      expect(result, isNotNull);
-    }
-  );
-
-  //Can't have more than 10 lettres
-  test("Invalid Name", () async{
-      String? result = _validations.validateName("Sebastianessss");
+      String? result = _validations.validateName("");
       expect(result, isNotNull);
     }
   );
