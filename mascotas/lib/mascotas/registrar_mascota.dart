@@ -237,12 +237,13 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
           false, // No permite que el diálogo se cierre tocando fuera de él
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
           content: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(),
               SizedBox(width: 20),
-              Text("Cargando..."),
+              Text("Cargando...", style: TextStyle(color: Colors.white)),
             ],
           ),
         );
@@ -476,11 +477,11 @@ class _RegistrarMascotaState extends State<RegistrarMascota> {
                                 onChanged: (value) {
                                   setState(() {
                                     _nameMascotaError =
-                                        _validations.validateOnlyLetters(value);
+                                        _validations.validateNamePet(value);
                                   });
                                 },
                                 validator: (value) =>
-                                    _validations.validateOnlyLetters(value),
+                                    _validations.validateNamePet(value),
                               ),
                             ),
                             SizedBox(

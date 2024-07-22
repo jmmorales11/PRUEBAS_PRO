@@ -104,20 +104,21 @@ class _TabBarCustomState extends State<TabBarCustom> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Confirmar salida'),
-          content: Text('¿Estás seguro de que deseas salir?'),
+          backgroundColor: Color.fromARGB(240, 22, 61, 96),
+          title: Text('Confirmar salida', style: TextStyle(color: Colors.white),),
+          content: Text('¿Estás seguro de que deseas salir?', style: TextStyle(color: Colors.white)),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // No salir
               },
-              child: Text('Cancelar'),
+              child: Text('Cancelar', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // Salir
               },
-              child: Text('Aceptar'),
+              child: Text('Aceptar', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
