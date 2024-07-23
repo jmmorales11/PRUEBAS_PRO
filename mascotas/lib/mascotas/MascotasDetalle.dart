@@ -25,13 +25,15 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
   Future<void> _loadInformacion() async {
     try {
       // Reemplaza con la URL de tu API para obtener la información de la mascota y las vacunas
-      final response = await http.get(Uri.parse('https://back-mascotas.vercel.app/bmpr/vacunas/${widget.mascota.nombreMas}'));
+      final response = await http.get(Uri.parse(
+          'https://back-mascotas.vercel.app/bmpr/vacunas/${widget.mascota.nombreMas}'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
         setState(() {
           // Actualizar los datos de vacunas y desparasitante
-          vacunasSeleccionadas = List<String>.from(data['vacunas'].map((v) => v['vacuna'] ?? ''));
+          vacunasSeleccionadas =
+              List<String>.from(data['vacunas'].map((v) => v['vacuna'] ?? ''));
           desparasitado = data['desparasitado'] ?? false;
         });
       } else {
@@ -49,10 +51,12 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
         Uri.parse('https://back-mascotas.vercel.app/bmpr/vacunas/agregar'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'mascota':widget.mascota.nombreMas,
-          'vacunas': vacunasSeleccionadas.map((vacuna) => {
-            'vacuna': vacuna,
-          }).toList(),
+          'mascota': widget.mascota.nombreMas,
+          'vacunas': vacunasSeleccionadas
+              .map((vacuna) => {
+                    'vacuna': vacuna,
+                  })
+              .toList(),
           'desparasitado': desparasitado,
         }),
       );
@@ -61,7 +65,6 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
         _loadInformacion(); // Recargar la información actualizada
       } else {
         throw Exception('Error al actualizar la información de la mascota');
-
       }
     } catch (e) {
       print('Error: $e');
@@ -165,6 +168,42 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
     );
   }
 
+  Widget _buildInfoField(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(
+            color: Color.fromARGB(240, 22, 61, 96),
+            width: 2,
+          ),
+          color: const Color.fromARGB(61, 0, 0, 0),
+        ),
+        width: 400, // Ajusta el ancho según tus necesidades
+        child: TextField(
+          controller: TextEditingController(text: value),
+          decoration: InputDecoration(
+            hintText:
+                'Enter $label', // O puedes usar 'Enter value' para un hint genérico
+            hintStyle: TextStyle(color: Colors.white54),
+            border: InputBorder.none,
+            labelText: label,
+            labelStyle: TextStyle(color: Colors.white),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0), // Ajusta el padding según tus necesidades
+            errorStyle: TextStyle(color: Colors.redAccent),
+            suffixIcon:
+                null, // Agrega lógica para el icono del sufijo si es necesario
+          ),
+          style: TextStyle(color: Colors.white),
+          enabled: false, // Cambia a true si quieres permitir la edición
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,58 +251,63 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Nombre: ${widget.mascota.nombreMas}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Raza: ${widget.mascota.raza}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Sexo: ${widget.mascota.sexo}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Fecha de nacimiento: ${widget.mascota.fechaNac}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Color de pelaje: ${widget.mascota.colorPelaje}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Tipo: ${widget.mascota.tipo}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Privacidad: ${widget.mascota.privacidad}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Descripción: ${widget.mascota.descripcion}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    SizedBox(height: 10),
-                                    Text('Vacunas: ${vacunasSeleccionadas.join(', ')}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                    Text('Desparasitada: ${desparasitado ? 'Sí' : 'No'}', style: TextStyle(fontSize: 20, color: Colors.white)),
+                                    _buildInfoField(
+                                        'Nombre', widget.mascota.nombreMas),
+                                    _buildInfoField(
+                                        'Raza', widget.mascota.raza),
+                                    _buildInfoField(
+                                        'Sexo', widget.mascota.sexo),
+                                    _buildInfoField('Fecha de nacimiento',
+                                        widget.mascota.fechaNac),
+                                    _buildInfoField('Color de pelaje',
+                                        widget.mascota.colorPelaje),
+                                    _buildInfoField(
+                                        'Tipo', widget.mascota.tipo),
+                                    _buildInfoField('Privacidad',
+                                        widget.mascota.privacidad),
+                                    _buildInfoField('Descripción',
+                                        widget.mascota.descripcion),
+                                    _buildInfoField('Vacunas',
+                                        vacunasSeleccionadas.join(', ')),
+                                    _buildInfoField('Desparasitada',
+                                        desparasitado ? 'Sí' : 'No'),
                                   ],
                                 ),
                               ),
                               SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: _showModal,
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 55, vertical: 10),
-
-                                  backgroundColor: Color.fromARGB(
-                                      60, 23, 68, 165), // Color de fondo
-
-                                  shadowColor: const Color.fromARGB(
-                                      61, 0, 0, 0), // Color de la sombra
-                                  elevation: 5, // Tamaño de la sombra
-                                  side: BorderSide(
-                                    color: Color.fromARGB(
-                                        239, 40, 125, 199), // Color del borde
-                                    width: 2, // Ancho del borde
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: _showModal,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 8), // Reduce el padding
+                                    backgroundColor: Color.fromARGB(
+                                        60, 23, 68, 165), // Color de fondo
+                                    shadowColor: const Color.fromARGB(
+                                        61, 0, 0, 0), // Color de la sombra
+                                    elevation: 3, // Tamaño de la sombra
+                                    side: BorderSide(
+                                      color: Color.fromARGB(
+                                          239, 40, 125, 199), // Color del borde
+                                      width: 1, // Ancho del borde
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          12), // Bordes redondeados
+                                    ),
                                   ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        17), // Bordes redondeados
-                                  ),
-                                ),
-                                child: Text(
-                                  'Agregar más información',
-                                  style: TextStyle(
+                                  child: Text(
+                                    'Agregar más información',
+                                    style: TextStyle(
                                       color: const Color.fromARGB(
                                           255, 255, 255, 255),
-                                      fontSize: 20),
+                                      fontSize:
+                                          14, // Tamaño de la fuente más pequeño
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ),
@@ -277,7 +321,8 @@ class _MascotasDetalleState extends State<MascotasDetalle> {
                         backgroundColor: Colors.transparent,
                         backgroundImage: widget.mascota.imagen != null
                             ? MemoryImage(base64Decode(widget.mascota.imagen!))
-                            : AssetImage('assets/default_dog.png') as ImageProvider,
+                            : AssetImage('assets/default_dog.png')
+                                as ImageProvider,
                       ),
                     ),
                   ],
@@ -302,11 +347,14 @@ class ContainerPainter extends CustomPainter {
       ..moveTo(0, 20)
       ..arcToPoint(Offset(20, 0), radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width - 20, 0)
-      ..arcToPoint(Offset(size.width, 20), radius: Radius.circular(20), clockwise: false)
+      ..arcToPoint(Offset(size.width, 20),
+          radius: Radius.circular(20), clockwise: false)
       ..lineTo(size.width, size.height - 20)
-      ..arcToPoint(Offset(size.width - 20, size.height), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(size.width - 20, size.height),
+          radius: Radius.circular(20), clockwise: true)
       ..lineTo(20, size.height)
-      ..arcToPoint(Offset(0, size.height - 20), radius: Radius.circular(20), clockwise: true)
+      ..arcToPoint(Offset(0, size.height - 20),
+          radius: Radius.circular(20), clockwise: true)
       ..close();
 
     canvas.drawPath(path, paint);
